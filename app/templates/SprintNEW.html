@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap.css">
+
+    <!-- Bootstrap Grid CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-grid.css">
+
+    <!-- Bootstrap Reboot CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-reboot.css">
+
+    <!-- Hover CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/hover-min.css">
+
+    <!-- Style Sheet CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/style.css">
+
+    <title>Sprint Page</title>
+
+    <script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev, el) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        el.appendChild(document.getElementById(data));
+    }
+    </script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <a class="navbar-brand" href="/index">Agility</a>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="/sprint_manage/project_id">Sprint Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/team/project_id">Team Page</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">Log Out</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="center">
+    <div class="dropdown">
+        <button type="button" class="sprint-header-button dropdown-toggle" data-toggle="dropdown">
+            Sprint #
+        </button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Sprint 1</a>
+            <a class="dropdown-item" href="#">Sprint 2</a>
+            <a class="dropdown-item" href="#">Sprint 3</a>
+            <a class="dropdown-item" href="#">Sprint 4</a>
+            <a class="dropdown-item" href="#">Sprint 5</a>
+        </div>
+    </div>
+</div>
+
+<div id="div1" class="card-list" ondrop="drop(event, this)" ondragover="allowDrop(event)">
+    <div id="CardListTitle">
+        Product Backlog
+    </div>
+    {% for p in [1,2,3] %}
+    <div id="drag1" class="card" draggable="true" ondragstart="drag(event)" ondrop="return false" ondragover="return false">
+        <div class="card-body">
+            <h5 class="card-title">get_title(p|string)</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Difficulty: get_difficulty(p|string)</h6>
+            <p class="card-text"> get_description(p|string)</p>
+            <div class="center">
+                <button href="#" class="popup-modal" onclick="myFunction('get_title(p|string) ', ' get_description(p|string) ', ' get_acceptance_criteria(p|string) ', ' get_difficulty(p|string) ')"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="container">
+<div id="div2" class="todo-card-list" ondrop="drop(event, this)" ondragover="allowDrop(event)">
+    <div class="sub-card-list-title">
+        To Do
+    </div>
+        {% for t in [1,2,3] %}
+        <div id="drag2" class="card" draggable="true" ondragstart="drag(event)" ondrop="return false" ondragover="return false">
+        <div class="card-body">
+            <h5 class="card-title"> get_title(t|string) </h5>
+            <h6 class="card-subtitle mb-2 text-muted">Difficulty: get_difficulty(t|string) </h6>
+            <p class="card-text"> get_description(t|string) </p>
+            <div class="center">
+                <button href="#" class="popup-modal" onclick="myFunction(' get_title(t|string) ', ' get_description(t|string) ', 'get_acceptance_criteria(t|string) ', ' get_difficulty(t|string) ')"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+</div>
+
+<div class="container">
+<div id="div3" class="inprogress-card-list" ondrop="drop(event, this)" ondragover="allowDrop(event)">
+    <div class="sub-card-list-title">
+        In Progress
+    </div>
+        {% for i in [1,2,3] %}
+        <div id="drag3" class="card" draggable="true" ondragstart="drag(event)" ondrop="return false" ondragover="return false">
+        <div class="card-body">
+            <h5 class="card-title"> get_title(i|string) </h5>
+            <h6 class="card-subtitle mb-2 text-muted">Difficulty:  get_difficulty(i|string) </h6>
+            <p class="card-text"> get_description(i|string) </p>
+            <div class="center">
+                <button href="#" class="popup-modal" onclick="myFunction(' get_title(i|string) ', ' get_description(i|string) ', 'get_acceptance_criteria(i|string) ', ' get_difficulty(i|string) ')"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+       {% endfor %}
+</div>
+</div>
+
+<div class="container">
+<div id="div4" class="done-card-list" ondrop="drop(event, this)" ondragover="allowDrop(event)">
+    <div class="sub-card-list-title">
+        Done
+    </div>
+        {% for d in [1,2,3] %}
+        <div id="drag4" class="card" draggable="true" ondragstart="drag(event)" ondrop="return false" ondragover="return false">
+        <div class="card-body">
+            <h5 class="card-title"> get_title(d|string) </h5>
+            <h6 class="card-subtitle mb-2 text-muted">Difficulty:  get_difficulty(d|string) </h6>
+            <p class="card-text"> get_description(d|string) </p>
+            <div class="center">
+                <button href="#" class="popup-modal" onclick="myFunction(' get_title(d|string) ', ' get_description(d|string) ', 'get_acceptance_criteria(d|string) ', ' get_difficulty(d|string) ')"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+       {% endfor %}
+</div>
+</div>
+
+</div>
+
+<!-- Card Details Modal -->
+<div class="modal fade" id="CardDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+        <!-- Header w/ Card Title -->
+        <div class="modal-header">
+            <textarea class="form-control" id="Title" placeholder="Enter Card Title" style="height:50px"></textarea>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- Body w/ Difficulty, Description, Acceptance Criteria -->
+        <div class="container">
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Difficulty:</span>
+                </div>
+                <input type="number" class="form-control" id="Difficulty" aria-label="With textarea" placeholder="Enter Difficulty"></input>
+            </div>
+            <!-- 2 columns w/ Description and Acceptance Criteria -->
+            <div class="row">
+                <div class="col">
+                    <h5 class="modal-title" id="Description title">Description</h5>
+                    <textarea class="form-control" id="Description" placeholder="Enter Description" style="height:500px"></textarea>
+                </div>
+                <div class="col">
+                    <h5 class="modal-title" id="AC title">Acceptance Criteria</h5>
+                    <textarea class="form-control" id="Acceptance" placeholder="Enter Acceptance Criteria" style="height:500px"></textarea>
+                </div>
+            </div>
+        </div>
+        <!-- Footer w/ "Save Changes" button -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sprint Review Modal -->
+<div class="modal fade" id="SprintReview" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SprintReview title">Sprint Review</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <textarea class="form-control" id="SprintReview-text" style="height:500px"></textarea>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sprint Retro Modal -->
+<div class="modal fade" id="SprintRetro" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SprintRetro title">Sprint Retrospective</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <textarea class="form-control" id="SprintRetro-text" style="height:500px"></textarea>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sprint-button-position">
+    <div class="btn-group-vertical">
+        <a href="#" class="button sprint-button hvr-shrink" data-toggle="modal" data-target="#SprintReview">Sprint Review</a>
+        <a href="#" class="button sprint-button hvr-shrink" data-toggle="modal" data-target="#SprintRetro">Sprint Retrospective</a>
+    </div>
+</div>
+
+<script>
+function myFunction(title, descrip, accept, diff) {
+    document.getElementById("Title").defaultValue = title;
+    document.getElementById("Description").defaultValue = descrip;
+    document.getElementById("Acceptance").defaultValue = accept;
+    document.getElementById("Difficulty").defaultValue = diff;
+
+}
+</script>
+
+<script src="../static/js/jquery-3.3.1.js"></script>
+<script src="../static/js/popper.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap.css">
+
+    <!-- Bootstrap Grid CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-grid.css">
+
+    <!-- Bootstrap Reboot CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-reboot.css">
+
+    <!-- Style Sheet CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Hover CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/hover-min.css">
+
+
+    <title>Sprint Management</title>
+
+    <script>
+        var card = 1;
+        function add_card() {
+            card++;
+            var objTo = document.getElementById('CardList')
+            var divtest = document.createElement("div");
+            divtest.innerHTML = '<div class="card">\n' +
+            '            <div class="card-body">\n' +
+            '                <h5 class="card-title">PBI {{p}}</h5>\n' +
+            '                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>\n' +
+            '                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card\'s content.</p>\n' +
+            '                <div class="center">\n' +
+            '                    <button href="#" class="popup-modal"\n' +
+            '                            data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>\n' +
+            '                </div>\n' +
+            '            </div>\n' +
+            '        </div>';
+
+            objTo.appendChild(divtest)
+        }
+
+        var sprint = 1;
+        function add_sprint() {
+            sprint++;
+            var objTo = document.getElementById('SprintList')
+            var divtest = document.createElement("div");
+            divtest.innerHTML = '<a href="#" class="button sprint-button hvr-shrink">Sprint {{p}}</a>';
+
+            objTo.appendChild(divtest)
+        }
+
+
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <a class="navbar-brand" href="/index">Agility</a>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="/project/{{ project_id }}">Project Page</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/team/{{ project_id }}">Team Page</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">Log Out</a>
+        </li>
+    </ul>
+</nav>
+
+
+<h1>Sprint Management</h1>
+
+<!-- Product Backlog Sidebar -->
+<div class="card-list" id="PbiSideBar" ondrop="drop(event, this)" ondragover="allowDrop(event)">
+
+    <div id="CardListTitle">
+        Product Backlog
+    </div>
+
+
+    <div id="CardList">
+    {% for p in prod_back_ids %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ get_title(p|string) }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ get_difficulty(p|string) }}</h6>
+            <div class="center">
+                <button href="#" id="card" value="" class="popup-modal" onclick="myFunction('{{ get_title(p|string) }}', '{{ get_description(p|string) }}', '{{ get_acceptance_criteria(p|string) }}', '{{ get_difficulty(p|string) }}')"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+    <a href="/create_card/{{ project_id }}" class="button sprint-button hvr-shrink" onclick="add_card();" > Create Product Backlog Item +</a>
+
+</div>
+
+<!-- Card Details Modal -->
+<div class="modal fade" id="CardDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+        <!-- Header w/ Card Title -->
+        <div class="modal-header">
+            <textarea class="form-control" id="Title" placeholder="Enter Card Title" style="height:50px"></textarea>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- Body w/ Difficulty, Description, Acceptance Criteria -->
+        <div class="container">
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Difficulty:</span>
+                </div>
+                <input type="number" class="form-control" id="Difficulty" aria-label="With textarea" placeholder="Enter Difficulty"></input>
+            </div>
+            <!-- 2 columns w/ Description and Acceptance Criteria -->
+            <div class="row">
+                <div class="col">
+                    <h5 class="modal-title" id="CardDetails title">Description</h5>
+                    <textarea class="form-control" id="Description" placeholder="Enter Description" style="height:500px"></textarea>
+                </div>
+                <div class="col">
+                    <h5 class="modal-title" id="CardDetails title">Acceptance Criteria</h5>
+                    <textarea class="form-control" id="Acceptance" placeholder="Enter Acceptance Criteria" style="height:500px"></textarea>
+                </div>
+            </div>
+        </div>
+        <!-- Footer w/ "Save Changes" button -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--<div id="SprintScrollbox" class="sprint-management-scrollbox">-->
+    <!---->
+    <!--{% for p in [1,2,3,4,5,6,7,8] %}-->
+    <!--<a href="#" class="button sprint-management-button hvr-shrink">Sprint {{p}}</a>-->
+    <!--{% endfor %}-->
+
+    <!--<input type="button" class="button hvr-shrink" onclick="add_sprint();" value="+ Add New Card">-->
+
+
+<!--</div>-->
+
+<!-- Sprint Sidebar -->
+<div class="sprint-management-scrollbox" id="SprintSideBar" ondrop="drop(event, this)" ondragover="allowDrop(event)">
+
+    <div id="CardListTitle">
+        Sprints
+    </div>
+
+
+    <div id="SprintList">
+    {% for p in sprint_ids %}
+    <a href="/sprint/{{ p }}" class="button sprint-button hvr-shrink">{{ get_sprint_num(p|string) }}</a>
+    {% endfor %}
+    </div>
+
+
+    <a href="/create_sprint/{{project_id}}" class="button sprint-button hvr-shrink" onclick="add_sprint();" >+ Create New Sprint</a>
+
+</div>
+
+<script>
+function myFunction(title, descrip, accept, diff) {
+    document.getElementById("Title").defaultValue = title;
+    document.getElementById("Description").defaultValue = descrip;
+    document.getElementById("Acceptance").defaultValue = accept;
+    document.getElementById("Difficulty").defaultValue = diff;
+}
+</script>
+
+
+<script src="../static/js/jquery-3.3.1.js"></script>
+<script src="../static/js/popper.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+
+<h1>{{ get_team_name(t_id[0]|string) }}</h1>
+<div class ="center"><p>Project Members</p></div>
+
+    {% for p in member_ids %}
+    <hr>
+	<div class ="container member-info">
+    		<p>Name: {{ get_username(p|string) }}</p>
+    		<p>Email: {{ get_email(p|string) }}</p>
+            <!-- add check if user's role is null show drop down list if not just get role and display -->
+
+            {% if get_role(p|string) == None %}
+            <form action="" method="post">
+                <p>Role:
+                    <select name="myList" id="ddl_rolelist">
+                        <option value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/1">Scrum Master</option>
+                        <option value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/2">Product Owner</option>
+                        <option value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/3">Developer</option>
+                    </select>
+                    <input type="button" onclick="gotolink(document.getElementById('ddl_rolelist').value)" value="Assign Role"/>
+                </p>
+            </form>
+            {% else %}
+                <p>Role: {{ get_role(p|string) }}</p>
+            {% endif %}
+	</div>
+    {% endfor %}
+
+<script>
+    function gotolink(href){
+        window.location.replace(href);
+    }
+</script>
+
+</body>
+{% endblock %}

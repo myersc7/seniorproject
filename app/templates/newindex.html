@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+      <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link  rel="stylesheet" href="../static/css/bootstrap.min.css">
+
+    <!-- Bootstrap Grid CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-grid.css">
+
+    <!-- Bootstrap Reboot CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-reboot.css">
+
+    <!-- Style Sheet CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Hover CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/hover-min.css">
+
+  <title>W3.CSS</title>
+
+</head>
+
+<body>
+
+<div class="w3-bar w3-blue">
+  <a href="#" class="w3-bar-item w3-button w3-hover-blue w3-mobile w3-light-blue w3-ripple w3-border w3-border-black" style="width:33%">Back</a>
+  <a href="{{url_for('index')}}" class="w3-bar-item w3-button w3-hover-blue w3-mobile w3-light-blue w3-ripple w3-border w3-border-black" style="width:34%">Home</a>
+  <a href="{{url_for('logout')}}" class="w3-bar-item w3-button w3-hover-blue w3-mobile w3-light-blue w3-ripple w3-border w3-border-black" style="width:33%">Sign out</a>
+</div>
+
+
+<h1>{{current_user.username}}</h1>
+
+
+{% for p in project_ids %}
+<div class="container">
+  <a href="/project/{{p}}" class="button user-page-button hvr-shrink">{{ getProjName(p|string) }}</a>
+  <a href="/project/{{p}}" class="button user-page-button hvr-shrink"> - </a>
+</div>
+{% endfor %}
+
+<div class="container">
+<a href='/CreateProject' class="w3-bar-item w3-button w3-hover-blue w3-mobile w3-light-blue w3-ripple w3-border w3-border-black">New Project <span class="glyphicon glyphicon-plus"></span></a>
+<br></br>
+</div>
+
+</body>
+</html>
+

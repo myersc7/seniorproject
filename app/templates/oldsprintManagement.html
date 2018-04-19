@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap.css">
+
+    <!-- Bootstrap Grid CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-grid.css">
+
+    <!-- Bootstrap Reboot CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-reboot.css">
+
+    <!-- Style Sheet CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Hover CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/hover-min.css">
+
+
+    <title>Sprint Management</title>
+</head>
+<body>
+
+
+<h1>Sprint Management</h1>
+
+<!-- Product Backlog Sidebar -->
+<div class="card-list">
+
+    <div id="CardListTitle">
+        Product Backlog
+    </div>
+    {% for p in ProdBackIds %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ myfunction({{p}})}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <div class="center">
+                <button href="#" class="popup-modal"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">PBI 2</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <div class="center">
+                <button href="#" class="popup-modal"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">PBI 3</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <div class="center">
+                <button href="#" class="popup-modal"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">PBI 4</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <div class="center">
+                <button href="#" class="popup-modal"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">PBI 5</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <div class="center">
+                <button href="#" class="popup-modal"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">PBI 6</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <div class="center">
+                <button href="#" class="popup-modal"
+                        data-toggle="modal" data-target="#CardDetails">View/Edit Card Details</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Card Details Modal -->
+<div class="modal fade" id="CardDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="CardDetails title">Card Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <textarea class="form-control" id="message-text" style="height:500px"></textarea>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sprint-management-scrollbox">
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 1</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 2</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 3</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 4</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 5</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 6</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 7</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 8</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 9</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 10</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 11</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 12</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 13</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 14</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 15</a>
+    <a href="#" class="button sprint-management-button hvr-shrink">Sprint 16</a>
+
+</div>
+
+<script src="../static/js/jquery-3.3.1.js"></script>
+<script src="../static/js/popper.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+
+</body>
+</html>

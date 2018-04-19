@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+        <!-- Bootstrap CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap.css">
+
+    <!-- Bootstrap Grid CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-grid.css">
+
+    <!-- Bootstrap Reboot CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-reboot.css">
+
+    <!-- Style Sheet CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Hover CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/hover-min.css">
+
+    <title>Card Page</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <a class="navbar-brand" href="#">Agility</a>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="#">Sprint Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Team Page</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link" href="#">Log Out</a>
+        </li>
+    </ul>
+</nav>
+
+
+        <!-- Header w/ Card Title -->
+        <div class="container">
+            <textarea class="form-control" id="message-text" style="height:50px">{{ get_title(user_stories_id|string) }}</textarea>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- Body w/ Difficulty, Description, Acceptance Criteria -->
+        <div class="container">
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Difficulty:</span>
+                </div>
+                <input type="number" class="form-control" aria-label="With textarea" value = {{ get_difficulty(user_stories_id|string) }}>
+                <!-- Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown button
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/PBI/{{ user_stories_id}}">Product Backlog</a>
+                        <a class="dropdown-item" href="/To_do/{{ user_stories_id }}">Todo</a>
+                        <a class="dropdown-item" href="/In_p/{{ user_stories_id }}">In Progress</a>
+                        <a class="dropdown-item" href="/Done/{{ user_stories_id }}">Done</a>
+                    </div>
+                </div>
+            </div>
+            <!-- 2 columns w/ Description and Acceptance Criteria -->
+            <div class="row">
+                <div class="col">
+                    <h5  id="CardDetails title">Description</h5>
+                    <textarea class="form-control" id="message-text" style="height:500px">{{ get_description(user_stories_id|string) }}</textarea>
+                </div>
+                <div class="col">
+                    <h5  id="CardDetails title">Acceptance Criteria</h5>
+                    <textarea class="form-control" id="message-text" style="height:500px"> {{ get_acceptance_criteria(user_stories_id|string) }}</textarea>
+                </div>
+            </div>
+        </div>
+        <!-- Footer w/ "Save Changes" button -->
+        <div class="container">
+            <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+
+
+<script src="../static/js/jquery-3.3.1.js"></script>
+<script src="../static/js/popper.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+</body>
+</html>

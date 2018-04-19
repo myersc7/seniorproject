@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap.css">
+
+    <!-- Bootstrap Grid CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-grid.css">
+
+    <!-- Bootstrap Reboot CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/bootstrap-reboot.css">
+
+    <!-- Style Sheet CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Hover CSS -->
+    <link type="text/css" rel="stylesheet" href="../static/css/hover-min.css">
+
+    <!-- Plotly -->
+    <script src="../static/js/plotly-latest.min.js"></script>
+
+
+    <title>Project Page</title>
+</head>
+<body>
+
+
+<h1>{{ProjName}}</h1>
+<p id="summary">Project Summary</p>
+<div class="center">
+    <button href="#" class="popup-modal"
+                    data-toggle="modal" data-target="#DoD">Definition of Done</button>
+</div>
+
+
+
+<!-- Creates two columns with Project management buttons and burnup chart -->
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <!-- Project Management Buttons -->
+            <a href="/sprintmanage/<project_id>" class="button project-page-button hvr-shrink">Sprint Management</a>
+            <a href="#" class="button project-page-button hvr-shrink">Current Sprint</a>
+            <a href="https://www.github.com" class="button project-page-button hvr-shrink">Project Github</a>
+            <a href="#" class="button project-page-button hvr-shrink">Team Page</a>
+        </div>
+        <div class="col-8">
+            <!-- Burnup Chart -->
+            <div id="burnup" style="width:100%;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Definition of Done Modal -->
+<div class="modal fade" id="DoD" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DoD title">Definition of Done</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <textarea class="form-control" id="message-text" style="height:500px"></textarea>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../static/js/jquery-3.3.1.js"></script>
+<script src="../static/js/popper.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+
+
+<!-- Creates Burnup Chart -->
+<script>
+
+var sprints = {{ sprints }}
+var totalDiff = {{ totalDiff }}
+var completeDiff = {{ completeDiff }}
+
+var trace0 = {
+  x: sprints,
+  y: totalDiff,
+  type: 'lines',
+  name: 'Total Difficulty'
+};
+
+var trace1 = {
+  x: sprints,
+  y: completeDiff,
+  type: 'lines',
+  name: 'Completed Difficulty'
+};
+
+var layout = {
+  title: 'Burn-Up Chart for Project',
+  xaxis: {
+    title: 'Sprint',
+    showgrid: false,
+  },
+  yaxis: {
+    title: 'Difficulty (points)',
+    showline: false
+  }
+};
+
+var data = [trace0, trace1];
+
+Plotly.newPlot('burnup', data, layout);
+</script>
+</body>
+</html>

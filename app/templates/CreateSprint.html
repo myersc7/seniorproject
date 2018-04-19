@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+
+<h1>Create Sprint</h1>
+
+    <div class="container">
+    <form align="center" action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.start_date.label }}<br>
+             {{ form.start_date(size=45) }}<br>
+        </p>
+        <p>
+            {{ form.end_date.label }}<br>
+            {{ form.end_date(size=45) }}<br>
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    </div>
+</body>
+{% endblock %}
