@@ -20,6 +20,8 @@ def get_role(user_id):
     except IndexError:
         return 0
 
+
+
 def get_team_id(team_id):
     team_id = db.engine.execute("select team_id from team where team.team_id = "+team_id)
     t_id = []
@@ -36,6 +38,13 @@ def get_team_name(team_id):
 
     return name[0]
 
+def get_dod(project_id)
+    dod = db.engine.execute("select Dod from project where project_id = " + project_id)
+    name = []
+    for n in dod:
+        n.append(n[0])
+
+    return n[0]
 
 def currentSprintNum(project_id: int):
     curr = db.engine.execute(
