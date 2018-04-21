@@ -339,7 +339,7 @@ def project_endpoint(project_id):
     # completeDiff = [0, 20, 33, 55]
     # sprints = [1, 2, 3, 4]
     return render_template('project.html', title="Project page", get_proj_name=get_proj_name, currentSprint=currentSprint, project_id=project_id,
-                           sprints=sprints,totalDiff=totalDiff, completeDiff=completeDiff, form = form)
+                           sprints=sprints,totalDiff=totalDiff, completeDiff=completeDiff, form = form, get_dod = get_dod)
 
 
 @app.route('/create_project', methods=['GET', 'POST'])
