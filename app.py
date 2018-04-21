@@ -1,5 +1,4 @@
 from flask import Flask
-import MySQLdb
 from configparser import ConfigParser
 import json
 from app import app, db, User

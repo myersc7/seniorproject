@@ -10,7 +10,7 @@ def home():
     totalDiff = [50, 65, 80, 70]
     completeDiff = [0, 20, 33, 55]
 
-    return render_template('buttonTest.html', sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff)
+    return render_template('projectNEW.html', sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff)
 
     #return render_template('Card.html')
 
