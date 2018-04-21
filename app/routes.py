@@ -466,6 +466,10 @@ def team_endpoint(project_id):
     return render_template('team.html', title="Team", member_ids=member_ids, get_username=get_username,
                            get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role)
 
+@app.route('/team/<project_id>')
+@login_required
+def index():
+    return render_template('AddMember.html')
 
 @app.route('/sprint_manage/<project_id>')
 @login_required
