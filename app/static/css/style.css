@@ -3,19 +3,8 @@ body {
     background-attachment: fixed;
     background-size: 100%;
 }
-/*
-@font-face {
-   font-family: agilityFont;
-   src: url(quotus-bold.ttf);
-}
-
-* {
-    font-family: agilityFont;
-}
-*/
 
 h1 {
-    /*font-family: agilityFont;*/
     color: blue;
     font-size: 50px;
     text-align: center;
@@ -66,10 +55,10 @@ li {
 
 
 .button {
-    /*background-color: dodgerblue;*/
-    background-image: url("blue-background2.jpg");
+    background-color: dodgerblue;
+   /* background-image: url("blue-background2.jpg");
     background-size: 500px;
-    background-position: center top;
+    background-position: center top;*/
     border: 2px solid black;
     color: white;
     padding: 15px 25px;
@@ -84,7 +73,7 @@ li {
 
 .button:hover {
     color: white;
-    background-color: transparent;
+    background-color: blue;
     text-decoration: none;
 }
 
@@ -106,10 +95,10 @@ li {
 }
 
 .sprint-header-button {
-    /*background-color: dodgerblue;*/
-    background-image: url("blue-background2.jpg");
-    background-size: 500px;
-    background-position: center top;
+    background-color: dodgerblue;
+    /*background-image: url("blue-background2.jpg");*/
+    /*background-size: 500px;*/
+    /*background-position: center top;*/
     border: 2px solid black;
     color: white;
     padding: 15px 25px;
