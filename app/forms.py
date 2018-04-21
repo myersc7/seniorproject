@@ -17,6 +17,9 @@ class ProjectForm(FlaskForm):
     team_name = StringField('Team Name', validators=[DataRequired()])
     github_link = StringField('Github Link')
 
+class DodForm(FlaskForm):
+    Dod = StringField('Def of done', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 class User_StoriesForm(FlaskForm):
     difficulty = IntegerField('Difficulty')

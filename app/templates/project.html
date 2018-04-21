@@ -38,10 +38,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <textarea class="form-control" id="message-text" style="height:500px"></textarea>
+        <form method='post' class="form-horizontal" >
+            {{ form.hidden_tag() }}
+            <p>{{ form.Dod(size=400) }}</p>
+            <p>{{ form.submit() }}</p>
+           </form>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -86,5 +89,7 @@ var layout = {
 var data = [trace0, trace1];
 Plotly.newPlot('burnup', data, layout);
 </script>
+<div class="container">
+</div>
 </body>
 {% endblock %}
