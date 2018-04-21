@@ -16,9 +16,16 @@
                 <!-- Project Management Buttons -->
                 <a href="/sprint_manage/{{ project_id }}" class="button project-page-button hvr-shrink">Sprint Management</a>
                 <a href="/sprint/{{currentSprint(project_id)}}" class="button project-page-button hvr-shrink">Current Sprint</a>
-                <a href="https://www.github.com/mcninsanity/RowanAgility" class="button github-page-button hvr-shrink">Project Github<a href="#" class="button edit-githublink-button hvr-shrink">Edit Link</a>
-</a>
-                <a href="#" class="button edit-githublink-button hvr-shrink">Edit Link</a>
+                <div class="container">
+                    <div class="row">
+                        <div class="col6">
+                            <a href="https://www.github.com/mcninsanity/RowanAgility" class="button project-page-button hvr-shrink">Project Github</a>
+                        </div>
+                        <div class="col">
+                            <a href="#" class="button project-page-button hvr-shrink">Edit Link</a>
+                        </div>
+                    </div>
+                </div>
                 <a href="/team/{{ project_id }}" class="button project-page-button hvr-shrink">Team Page</a>
             </div>
             <div class="col-8">
