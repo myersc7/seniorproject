@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Create Project</h1>
+    <div class="container">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p align="center">
+            {{ form.username.label }}<br>
+            {{ form.username(size=45) }}<br>
+        </p>
+        <p align="center">
+            {{ form.email.label }}<br>
+            {{ form.email(size=45) }}<br>
+        </p>
+        <p align="center">{{ form.submit() }}</p>
+    </form>
+    </div>
+{% endblock %}
