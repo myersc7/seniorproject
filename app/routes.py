@@ -38,7 +38,7 @@ def get_team_name(team_id):
 
     return name[0]
 
-def get_dod(project_id)
+def get_dod(project_id):
     dod = db.engine.execute("select Dod from project where project_id = " + project_id)
     name = []
     for n in dod:
@@ -58,7 +58,7 @@ def currentSprintNum(project_id: int):
     try:
         return str(currSprint[0])
     except IndexError:
-        return None
+        return 0
 
 
 def currentSprint(project_id: int):
@@ -152,6 +152,8 @@ def get_email(user_id):
 def PBI(user_stories_id: int):
     project_id = str(db.engine.execute(
         "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
+    sprint_id = str(db.engine.execute(
+        "Select sprint_id from user_stories_sprint_table where user_stories_spint_table.user_stories_id ='" + user_stories_id + "'").scalar())
     curr = db.engine.execute(
         "Select sprint.sprint_id from sprint join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
         "join project on (project_sprint_table.project_id = project.project_id)"
@@ -164,11 +166,12 @@ def PBI(user_stories_id: int):
     db.engine.execute("insert into user_stories_sprint_table (sprint_id, user_stories_id) values ('" + str(sprint[0] + "', '" + user_stories_id + "')"))
     #db.session.add(stmt)
     #db.session.commit()
-    return redirect(url_for(index))
+    return redirect(url_for('Sprint', sprint_id=sprint_id))
 
 @app.route('/To_do/<user_stories_id>', methods=['GET', 'POST'])
 def To_do(user_stories_id: int):
-
+    sprint_id = str(db.engine.execute(
+        "Select sprint_id from user_stories_sprint_table where user_stories_spint_table.user_stories_id ='" + user_stories_id + "'").scalar())
     project_id = str(db.engine.execute(
         "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
     curr = db.engine.execute(
@@ -183,10 +186,12 @@ def To_do(user_stories_id: int):
     db.engine.execute("insert into user_stories_sprint_table (sprint_id, user_stories_id) values ('" + str(sprint[0]) + "', '" + user_stories_id + "')")
     #db.session.add(stmt)
     #db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('Sprint', sprint_id=sprint_id))
 
 @app.route('/In_p/<user_stories_id>', methods=['GET', 'POST'])
 def In_p(user_stories_id: int):
+    sprint_id = str(db.engine.execute(
+        "Select sprint_id from user_stories_sprint_table where user_stories_spint_table.user_stories_id ='" + user_stories_id + "'").scalar())
     project_id = str(db.engine.execute(
         "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
     curr = db.engine.execute(
@@ -202,10 +207,12 @@ def In_p(user_stories_id: int):
         sprint[0]) + "', '" + user_stories_id + "')")
     #db.session.add(stmt)
     #db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('Sprint', sprint_id=sprint_id))
 
 @app.route('/Done/<user_stories_id>', methods=['GET', 'POST'])
 def Done(user_stories_id: int):
+    sprint_id = str(db.engine.execute(
+        "Select sprint_id from user_stories_sprint_table where user_stories_spint_table.user_stories_id ='" + user_stories_id + "'").scalar())
     project_id = str(db.engine.execute(
         "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
     curr = db.engine.execute(
@@ -221,7 +228,7 @@ def Done(user_stories_id: int):
         sprint[0]) + "', '" + user_stories_id + "')")
     #db.session.add(stmt)
     #db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('Sprint', sprint_id=sprint_id))
 
 @app.route('/Card/<user_stories_id>', methods=['GET', 'POST'])
 def card(user_stories_id: int):
@@ -330,6 +337,10 @@ def project_endpoint(project_id):
                                    " (project_sprint_table.project_id = project.project_id)"
                                    "where project.project_id = '" + project_id + "' and sprint.sprint_num = '" + str(
             num) + "'").scalar()
+        #try:
+         #   return str(currSprint[0])
+        #except IndexError:
+         #   return None
         total = total + int(little)
         completeDiff.append(total)
     for num in sprints_num2:
@@ -538,7 +549,7 @@ def create_card(project_id):
         user_stories.projects.append(project)
         db.session.commit()
         flash('Congratulations, you made a User Story!')
-        return redirect(url_for('project_endpoint', project_id=project_id))
+        return redirect(url_for('sprint_manage_endpoint', project_id=project_id))
     return render_template('CreateUserStory.html', title='Create User Story', form=form, project_id=project_id)
 
 
