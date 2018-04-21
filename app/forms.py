@@ -17,6 +17,10 @@ class ProjectForm(FlaskForm):
     team_name = StringField('Team Name', validators=[DataRequired()])
     github_link = StringField('GitHub Link')
 
+class AddMemberForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Enter')
 
 class DodForm(FlaskForm):
     Dod = TextAreaField('Def of done', validators=[DataRequired()])
