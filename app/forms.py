@@ -18,8 +18,8 @@ class ProjectForm(FlaskForm):
     github_link = StringField('Github Link')
 
 class DodForm(FlaskForm):
-    Dod = StringField('Def of done', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    Dod = TextAreaField('Def of done', validators=[DataRequired()])
+    submit = SubmitField('Save')
 
 class User_StoriesForm(FlaskForm):
     difficulty = IntegerField('Difficulty')
