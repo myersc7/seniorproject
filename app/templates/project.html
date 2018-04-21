@@ -45,11 +45,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <form method='post' class="form-horizontal" >
+        <div class = "center">
+        <form method='post' class="form-horizontal">
             {{ form.hidden_tag() }}
-            <p>{{ form.Dod(size=400) }}</p>
+            <p>{{ form.Dod(cols="35", rows="20") }} </p>
             <p>{{ form.submit() }}</p>
            </form>
+        </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
