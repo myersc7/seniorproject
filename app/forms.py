@@ -19,8 +19,8 @@ class ProjectForm(FlaskForm):
 
 
 class DodForm(FlaskForm):
-    Dod = StringField('Def of done', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    Dod = TextAreaField('Def of done', validators=[DataRequired()])
+    submit = SubmitField('Save')
 
 
 class User_StoriesForm(FlaskForm):
