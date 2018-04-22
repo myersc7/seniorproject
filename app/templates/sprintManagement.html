@@ -132,11 +132,23 @@
             <div class="row">
                 <div class="col">
                     <h5 class="modal-title" id="CardDetails title">Description</h5>
-                    <textarea class="form-control" id="Description" placeholder="Enter Description" style="height:500px"></textarea>
+                    <div class = "center">
+                        <form method='post' class="form-horizontal">
+                            {{ desc.hidden_tag() }}
+                            <p>{{ desc.Desc(cols="35", rows="20") }} </p>
+                            <p>{{ desc.submit() }}</p>
+                        </form>
+                    </div>
                 </div>
                 <div class="col">
                     <h5 class="modal-title" id="CardDetails title">Acceptance Criteria</h5>
-                    <textarea class="form-control" id="Acceptance" placeholder="Enter Acceptance Criteria" style="height:500px"></textarea>
+                    <div class = "center">
+                        <form method='post' class="form-horizontal">
+                            {{ accptcrit.hidden_tag() }}
+                            <p>{{ accptcrit.AccptCrit(cols="35", rows="20") }} </p>
+                            <p>{{ accptcrit.submit() }}</p>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
