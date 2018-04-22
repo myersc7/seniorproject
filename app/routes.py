@@ -665,5 +665,17 @@ def remove_role(role_id, project_id, team_id, user_id):
     db.engine.execute("update team_user_table set role_id = null where team_id = " + team_id +
                       " and user_id = "+user_id)
     flash('Role successfully removed!')
-    return redirect(url_for('team_endpoint', project_id=project_id))  # WHERE IS THIS REDIRECTED TO AFTER DELETION??
+    return redirect(url_for('team_endpoint', project_id=project_id))
+
+
+@app.route('/edit_githublink/<project_id>/<path:github_link>', methods=['GET', 'POST'])
+def edit_githublink(project_id, github_link):
+    proj = Project.query.filter_by(project_id=project_id).first()
+
+    if not proj:
+        flash('Project not found!')
+
+    db.engine.execute("update project set github_link = " + github_link + " where project_id = " + project_id)
+
+    return redirect(url_for('project_endpoint', project_id=project_id))
 
