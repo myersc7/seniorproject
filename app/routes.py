@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, json
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, ProjectForm, SprintForm, User_StoriesForm, DodForm
+from app.forms import LoginForm, RegistrationForm, ProjectForm, SprintForm, User_StoriesForm, DodForm, AddMemberForm
+from app.forms import RetroForm, ReviewForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Project, Team, Sprint, User_Stories, Role
 from werkzeug.urls import url_parse
@@ -44,6 +45,22 @@ def get_dod(project_id):
     dod = db.engine.execute("select Dod from project where project_id = " + project_id)
     name = []
     for n in dod:
+        n.append(n[0])
+
+    return n[0]
+
+def get_review(project_id):
+    review = db.engine.execute("select Review from project where project_id = " + project_id)
+    name = []
+    for n in review:
+        n.append(n[0])
+
+    return n[0]
+
+def get_retro(project_id):
+    retro = db.engine.execute("select Retro from project where project_id = " + project_id)
+    name = []
+    for n in retro:
         n.append(n[0])
 
     return n[0]
@@ -464,9 +481,10 @@ def team_endpoint(project_id):
         t_id.append(id[0])
 
     return render_template('team.html', title="Team", member_ids=member_ids, get_username=get_username,
-                           get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role)
+                           get_email=get_email, project_id=project_id, t_id=t_id, get_team_name=get_team_name,
+                           get_role=get_role)
 
-app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
+@app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
 @login_required
 def add_member(project_id):
     form = AddMemberForm()
@@ -535,6 +553,19 @@ def sprint_endpoint(sprint_id):
 
         return(redirect(url_for('create_sprint', project_id = project_id))
     '''
+    sprintretro=RetroForm()
+    if sprintretro.validate():
+        Retro = str(sprintretro.Retro.data)
+        db.engine.execute("UPDATE project SET Retro= \"Check\" WHERE project_id= 1")
+        flash("Sprint Retrospective added")
+        return redirect(url_for('sprint'))
+
+    sprintreview = ReviewForm()
+    if sprintreview.validate():
+        Review = str(sprintreview.Review.data)
+        db.engine.execute("UPDATE project SET Review= \"Check\" WHERE project_id= 1")
+        flash("Sprint Review added")
+        return redirect(url_for('sprint'))
 
     project_id = str(
         db.engine.execute("select project_id from project_sprint_table where sprint_id ='" + sprint_id + "'").scalar())
@@ -576,7 +607,8 @@ def sprint_endpoint(sprint_id):
         prod_back_ids.append(prod_back[0])
     return render_template('Sprint.html', title="Sprint Page", project_id=project_id, todo=todo, inprogress=in_progress,
                            done=done, prod_back_ids=prod_back_ids, get_title=get_title, get_difficulty=get_difficulty,
-                           get_description=get_description, get_acceptance_criteria=get_acceptance_criteria)
+                           get_description=get_description, get_acceptance_criteria=get_acceptance_criteria,
+                           sprintretro=sprintretro, sprintreview=sprintreview)
 
 
 @app.route('/create_card/<project_id>', methods=['GET', 'POST'])
