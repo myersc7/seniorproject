@@ -10,7 +10,8 @@ team_project_table = db.Table('team_project_table',
 
 team_user_table = db.Table('team_user_table',
                            db.Column('user_id', db.Integer, db.ForeignKey('user.user_id')),
-                           db.Column('team_id', db.Integer, db.ForeignKey('team.team_id'))
+                           db.Column('team_id', db.Integer, db.ForeignKey('team.team_id')),
+                           db.Column('role_id', db.Integer, db.ForeignKey('role.role_id'))
                            )
 
 team_sprint_table = db.Table('team_sprint_table',
