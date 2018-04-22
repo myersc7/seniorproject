@@ -81,3 +81,11 @@ class SprintForm(FlaskForm):
     end_date = DateField('End Date (MM-DD-YYYY)', format='%m/%d/%Y', validators=[DataRequired()])
     # sprint_num = IntegerField('Sprint Number', validators=[DataRequired()])   # don't think we need this
     submit = SubmitField('Submit')
+
+class DescForm(FlaskForm):
+        Desc = TextAreaField('Desc', validators=[DataRequired()])
+        submit = SubmitField('Save')
+
+class AccptCritForm(FlaskForm):
+        AccptCrit = TextAreaField('AccptCrit', validators=[DataRequired()])
+        submit = SubmitField('Save')
