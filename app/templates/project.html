@@ -1,5 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
+
+<script>
+    function getLink(){
+        var link = prompt("Enter your githublink here, https://github.com");
+
+        if(link === null) { return; } // if user press cancel do nothing
+        if (link == null || link == "" || !link.includes("https://github.com")) {
+            alert("Invalid github link, please try again!");
+        } else {
+            document.getElementById("GitHubLink").href = link;
+            alert("GitHub link updated!");
+        }
+
+
+    }
+</script>
+
 <body>
 
 <h1>{{ get_proj_name(project_id) }}</h1>
@@ -22,7 +39,7 @@
                             <a href="https://www.github.com/mcninsanity/RowanAgility" class="button project-page-button hvr-shrink">Project Github</a>
                         </div>
                         <div class="col">
-                            <a href="#" class="button project-page-button hvr-shrink">Edit Link</a>
+                            <button type="button" class="button github-page-button hvr-shrink" onclick="getLink()">Edit Link</button>
                         </div>
                     </div>
                 </div>
