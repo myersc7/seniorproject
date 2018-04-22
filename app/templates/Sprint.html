@@ -41,12 +41,19 @@
 </head>
 <body>
 
+
+<!-- Navbar -->
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
     <a class="navbar-brand" href="/index">Agility</a>
     <ul class="navbar-nav mr-auto">
         <li class="nav-item">
+            <a class="nav-link" href="/project/{{ project_id }}">Project Page</a>
+        </li>
+
+        <li class="nav-item">
             <a class="nav-link" href="/sprint_manage/{{ project_id }}">Sprint Management</a>
         </li>
+
         <li class="nav-item">
             <a class="nav-link" href="/team/{{ project_id }}">Team Page</a>
         </li>
