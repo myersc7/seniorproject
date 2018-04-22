@@ -26,6 +26,13 @@ class DodForm(FlaskForm):
     Dod = TextAreaField('Def of done', validators=[DataRequired()])
     submit = SubmitField('Save')
 
+class ReviewForm(FlaskForm):
+    Review = TextAreaField('Review', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+class RetroForm(FlaskForm):
+    Retro = TextAreaField('Retro', validators=[DataRequired()])
+    submit = SubmitField('Save')
 
 class User_StoriesForm(FlaskForm):
     difficulty = IntegerField('Difficulty', validators=[DataRequired()])
