@@ -482,7 +482,8 @@ def team_endpoint(project_id):
         t_id.append(id[0])
 
     return render_template('team.html', title="Team", member_ids=member_ids, get_username=get_username,
-                           get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role)
+                           get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role,
+                           project_id=project_id)
 
 @app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
 @login_required
