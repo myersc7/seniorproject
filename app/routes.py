@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, json
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, ProjectForm, SprintForm, User_StoriesForm, DodForm
+from app.forms import LoginForm, RegistrationForm, ProjectForm, SprintForm, User_StoriesForm, DodForm, AddMemberForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Project, Team, Sprint, User_Stories, Role
 from werkzeug.urls import url_parse
@@ -484,7 +484,7 @@ def team_endpoint(project_id):
     return render_template('team.html', title="Team", member_ids=member_ids, get_username=get_username,
                            get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role)
 
-app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
+@app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
 @login_required
 def add_member(project_id):
     form = AddMemberForm()
@@ -500,10 +500,16 @@ def add_member(project_id):
         user_id = []
         for u in u_id:
             user_id.append(str(u[0]))
+        # if user_id is None:
+        #     flash("User not found!")
+        #     return redirect('/addmember/<project_id>')
+        # else:
         db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
-
+        u_id = []
         flash('Congratulations, you added a member!')
-        return redirect('/team/<project_id>')
+        return redirect('/team/'+project_id)
+
+    team_id = []
     return render_template('AddMember.html', title='Add Member', form=form)
 
 @app.route('/sprint_manage/<project_id>')
