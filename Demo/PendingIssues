@@ -1,6 +1,5 @@
-1.  Able to assign roles to a team member multiple times
-2.  If a sprint has no cards, burnup crashes.
-3.  If you put something back into Product Backlog, it counts for urrent sprint on the burnup.
-4.  "Add Member button doesn't work if the user you are trying to add doesn't exist.
-5.  Sprint Review/Retro does not have functionality.
-6.  Current Sprint button doesn't work.
+1.  If a sprint has no cards, burnup crashes.
+2.  If you put something back into Product Backlog, it counts for current sprint on the burnup.
+3.  Add Member button doesn't work if the user you are trying to add doesn't exist.
+4.  Sprint Review/Retro does not have functionality.
+5.  Current Sprint button doesn't work.
