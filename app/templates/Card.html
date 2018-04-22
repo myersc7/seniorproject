@@ -42,8 +42,10 @@
 
 
         <!-- Header w/ Card Title -->
+        <form align="center" action="" method="post">
         <div class="container">
-            <textarea class="form-control" id="message-text" style="height:50px">{{ get_title(user_stories_id|string) }}</textarea>
+            {{ form.hidden_tag() }}
+            {{ form.title }}
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -54,7 +56,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Difficulty:</span>
                 </div>
-                <input type="number" class="form-control" aria-label="With textarea" value = {{ get_difficulty(user_stories_id|string) }}>
+                {{ form.Difficulty }}
                 <!-- Dropdown -->
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -72,18 +74,17 @@
             <div class="row">
                 <div class="col">
                     <h5  id="CardDetails title">Description</h5>
-                    <textarea class="form-control" id="message-text" style="height:500px">{{ get_description(user_stories_id|string) }}</textarea>
+                    {{ form.Description(cols="35", rows="10") }}
                 </div>
                 <div class="col">
-                    <h5  id="CardDetails title">Acceptance Criteria</h5>
-                    <textarea class="form-control" id="message-text" style="height:500px"> {{ get_acceptance_criteria(user_stories_id|string) }}</textarea>
+                    <h5  id="CardDetails title">Acceptance Criteria</h5>>
+                    {{ form.Acceptance_criteria(cols="35", rows="20") }}
                 </div>
             </div>
         </div>
         <!-- Footer w/ "Save Changes" button -->
-        <div class="container">
-            <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+        {{ form.submit() }}
+        </form>
 
     <!-- Scripts -->
     <script src="../static/js/jquery-3.3.1.js"></script>

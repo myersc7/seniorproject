@@ -28,10 +28,10 @@ class DodForm(FlaskForm):
 
 
 class User_StoriesForm(FlaskForm):
-    difficulty = IntegerField('Difficulty', validators=[DataRequired()])
-    acceptance_criteria = TextAreaField('Acceptance Criteria', validators=[DataRequired()])
-    status = StringField('Status', validators=[DataRequired()])
-    description = StringField('Description', validators=[DataRequired()])
+    Difficulty = IntegerField('Difficulty', validators=[DataRequired()])
+    Acceptance_criteria = TextAreaField('Acceptance Criteria', validators=[DataRequired()])
+    status = StringField('Status')
+    Description = StringField('Description', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
@@ -70,7 +70,7 @@ class RegistrationForm(FlaskForm):
 
 
 class SprintForm(FlaskForm):
-    start_date = DateField('Start Date (MM-DD-YYYY)', format='%m/%d/%Y', validators=[DataRequired()])
-    end_date = DateField('End Date (MM-DD-YYYY)', format='%m/%d/%Y', validators=[DataRequired()])
+    start_date = DateField('Start Date (MM-DD-YYYY)', format='%m-%d-%Y', validators=[DataRequired()])
+    end_date = DateField('End Date (MM-DD-YYYY)', format='%m-%d-%Y', validators=[DataRequired()])
     # sprint_num = IntegerField('Sprint Number', validators=[DataRequired()])   # don't think we need this
     submit = SubmitField('Submit')
