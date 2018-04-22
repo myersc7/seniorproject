@@ -179,6 +179,7 @@ def PBI(user_stories_id: int):
     #db.session.commit()
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
+
 @app.route('/To_do/<user_stories_id>', methods=['GET', 'POST'])
 def To_do(user_stories_id: int):
 
@@ -203,6 +204,7 @@ def To_do(user_stories_id: int):
     #db.session.commit()
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
+
 @app.route('/In_p/<user_stories_id>', methods=['GET', 'POST'])
 def In_p(user_stories_id: int):
     project_id = str(db.engine.execute(
@@ -225,6 +227,7 @@ def In_p(user_stories_id: int):
     #db.session.commit()
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
+
 @app.route('/Done/<user_stories_id>', methods=['GET', 'POST'])
 def Done(user_stories_id: int):
     project_id = str(db.engine.execute(
@@ -246,6 +249,7 @@ def Done(user_stories_id: int):
     #db.session.add(stmt)
     #db.session.commit()
     return redirect(url_for('sprint_endpoint', sprint_id= sprint_id))
+
 
 @app.route('/Card/<user_stories_id>', methods=['GET', 'POST'])
 def card(user_stories_id: int):
@@ -512,6 +516,7 @@ def add_member(project_id):
     team_id = []
     return render_template('AddMember.html', title='Add Member', form=form)
 
+
 @app.route('/sprint_manage/<project_id>')
 @login_required
 def sprint_manage_endpoint(project_id):
@@ -621,21 +626,44 @@ def create_card(project_id):
     return render_template('CreateUserStory.html', title='Create User Story', form=form, project_id=project_id)
 
 
+def get_role_id(role_title):
+    role = Role.query.filter_by(title=role_title).first()
+
+    try:
+        return role.role_id
+    except IndexError:
+        return 'None'
+
+
 @app.route('/assign_role/<team_id>/<project_id>/<user_id>/<role_id>')
 @login_required
-def assign_role(team_id, project_id, user_id, role_id):
+def assign_role(team_id, project_id, role_id, user_id):
     role = Role.query.filter_by(role_id=role_id).first()
-    user = User.query.filter_by(user_id=user_id).first()
-    team = Team.query.filter_by(team_id=team_id).first()
-    # Rename title to role_title in db to eliminate conflict with title keyword in python?
-    if not role:
-        flash('Role not found!')
-    # FUNCTIONAL BUT ROLES CAN BE DUPLICATED FIX IF CAN OR SET ROLE BY THE MOST CURRENT COMMIT?
-    elif role is not None:
-        user.role.append(role)
-        db.session.commit()
-        # user.teams.append(team)
-        # db.session.commit()
 
+    # Rename title to role_title in db to eliminate conflict with title keyword in python?
+    if role is None:
+        flash('Role not found!')
+
+    db.engine.execute("update team_user_table set role_id = " + role_id + " where team_id = " + team_id +
+                      " and user_id = " + user_id)
+    flash('Role assignment successful!')
     # Make role.html to render the data onto page
     return redirect(url_for('team_endpoint', project_id=project_id))  # Title conflicts with title for html?
+
+
+@app.route('/remove_role/<role_id>/<project_id>/<team_id>/<user_id>')
+@login_required
+def remove_role(role_id, project_id, team_id, user_id):
+    # Make a role unique so its easier to maintain
+    role = Role.query.filter_by(role_id=role_id).first()
+
+    if role is None:
+        flash('Role was not found!')
+        return redirect(url_for('team_endpoint', project_id=project_id))
+    # how to delete an attribute from a table?
+
+    db.engine.execute("update team_user_table set role_id = null where team_id = " + team_id +
+                      " and user_id = "+user_id)
+    flash('Role successfully removed!')
+    return redirect(url_for('team_endpoint', project_id=project_id))  # WHERE IS THIS REDIRECTED TO AFTER DELETION??
+

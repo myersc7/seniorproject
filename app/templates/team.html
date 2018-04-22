@@ -5,26 +5,29 @@
 <h1>{{ get_team_name(t_id[0]|string) }}</h1>
 <div class ="center"><p>Project Members</p></div>
 
-    {% for p in member_ids %}
+    {% for p in member_ids %} <!-- p = user_id -->
     <hr>
 	<div class ="container member-info">
     		<p>Name: {{ get_username(p|string) }}</p>
     		<p>Email: {{ get_email(p|string) }}</p>
             <!-- add check if user's role is null show drop down list if not just get role and display -->
 
-            {% if get_role(p|string) == None %}
+            {% if get_role(p|string) == 'None' %}
             <form action="" method="post">
                 <p>Role:
                     <select name="myList" id="ddl_rolelist">
-                        <option value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/1">Scrum Master</option>
-                        <option value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/2">Product Owner</option>
-                        <option value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/3">Developer</option>
+                        <!-- /assign_role/teamid/projid/userid/roleid -->
+                        <option id="Scrum Master" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Scrum Master") }}">Scrum Master</option>
+                        <option value="Product Owner" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Product Owner") }}">Product Owner</option>
+                        <option value="Developer" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Developer") }}">Developer</option>
                     </select>
-                    <input type="button" onclick="gotolink(document.getElementById('ddl_rolelist').value)" value="Assign Role"/>
+                    <input type="button" onclick="goto_link(document.getElementById('ddl_rolelist').value)" value="Assign Role">
                 </p>
             </form>
             {% else %}
-                <p>Role: {{ get_role(p|string) }}</p>
+                <!-- /remove_role/roleid/projid/teamid/userid -->
+                <p>Role: {{ get_role(p|string) }} <a href="/remove_role/{{ get_role_id(get_role(p|string)) }}/{{ project_id }}/{{ t_id[0]|string }}/{{ p }}" class="button" onclick="return confirm('Are you sure?')">Remove Role</a></p>
+
             {% endif %}
 	</div>
     {% endfor %}
@@ -33,8 +36,8 @@
     </div>
 
 <script>
-    function gotolink(href){
-        window.location.replace(href);
+    function goto_link(href){
+        window.location.replace(href)
     }
 </script>
 
