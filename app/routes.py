@@ -466,10 +466,27 @@ def team_endpoint(project_id):
     return render_template('team.html', title="Team", member_ids=member_ids, get_username=get_username,
                            get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role)
 
-@app.route('/team/<project_id>')
+app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
 @login_required
-def index():
-    return render_template('AddMember.html')
+def add_member(project_id):
+    form = AddMemberForm()
+    t_id = db.engine.execute("select team_id from team_project_table where project_id = "+project_id)
+    team_id = []
+    for t in t_id:
+        team_id.append(str(t[0]))
+
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        u_id = db.engine.execute("select user_id from user where username = '"+username+"' and email = '"+email+"'")
+        user_id = []
+        for u in u_id:
+            user_id.append(str(u[0]))
+        db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
+
+        flash('Congratulations, you added a member!')
+        return redirect('/team/<project_id>')
+    return render_template('AddMember.html', title='Add Member', form=form)
 
 @app.route('/sprint_manage/<project_id>')
 @login_required
