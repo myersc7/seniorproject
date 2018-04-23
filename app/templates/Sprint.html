@@ -65,6 +65,7 @@
         </li>
     </ul>
 </nav>
+{#
 
 <div class="dropdown center sprint-dropdown">
     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,6 +78,7 @@
         {% endfor %}
     </div>
 </div>
+#}
 
 
 <div id="div1" class="card-list" ondrop="drop(event, this)" ondragover="allowDrop(event)">
@@ -159,7 +161,7 @@
 
 </div>
 
-<!-- Sprint Review Modal -->
+<!-- Sprint Review Modal
 <div class="modal fade" id="SprintReview" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -182,9 +184,9 @@
     </div>
   </div>
 </div>
+-->
 
-
-<!-- Sprint Retro Modal -->
+<!-- Sprint Retro Modal
 <div class="modal fade" id="SprintRetro" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -207,11 +209,11 @@
     </div>
   </div>
 </div>
-
+-->
 <div class="sprint-button-position">
     <div class="btn-group-vertical">
-        <a href="#" class="button sprint-button hvr-shrink" data-toggle="modal" data-target="#SprintReview">Sprint Review</a>
-        <a href="#" class="button sprint-button hvr-shrink" data-toggle="modal" data-target="#SprintRetro">Sprint Retrospective</a>
+        {#<a href="#" class="button sprint-button hvr-shrink" data-toggle="modal" data-target="#SprintReview">Sprint Review</a>
+        <a href="#" class="button sprint-button hvr-shrink" data-toggle="modal" data-target="#SprintRetro">Sprint Retrospective</a>#}
     </div>
 </div>
 
