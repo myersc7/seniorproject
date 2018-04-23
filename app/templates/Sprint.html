@@ -162,7 +162,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <textarea class="form-control" id="SprintReview-text" style="height:500px">Met our definition of done. Customer seemed satisified.</textarea>
+        <div class = "center">
+        <form method='post' class="form-horizontal">
+            {{ sprintreview.hidden_tag() }}
+            <p>{{ sprintreview.Review }} </p>
+            <p>{{ sprintreview.submit() }}</p>
+           </form>
+        </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
@@ -170,6 +176,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Sprint Retro Modal -->
 <div class="modal fade" id="SprintRetro" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -181,7 +188,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <textarea class="form-control" id="SprintRetro-text" style="height:500px">Work on communication and time management.</textarea>
+        <div class = "center">
+        <form method='post' class="form-horizontal">
+            {{ sprintretro.hidden_tag() }}
+            <p>{{ sprintretro.Retro(size=45) }} </p>
+            <p>{{ sprintretro.submit() }}</p>
+           </form>
+        </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>

@@ -12,15 +12,17 @@ class LoginForm(FlaskForm):
 
 
 class ProjectForm(FlaskForm):
-    proj_name = StringField('Project Name',validators=[DataRequired()])
+    proj_name = StringField('Project Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
     team_name = StringField('Team Name', validators=[DataRequired()])
     github_link = StringField('GitHub Link')
+
 
 class AddMemberForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Enter')
+
 
 class DodForm(FlaskForm):
     Dod = TextAreaField('Def of done', validators=[DataRequired()])
@@ -34,6 +36,16 @@ class User_StoriesForm(FlaskForm):
     Description = StringField('Description', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+class ReviewForm(FlaskForm):
+    Review = StringField('Review', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+
+class RetroForm(FlaskForm):
+    Retro = StringField('Retro', validators=[DataRequired()])
+    submit = SubmitField('Save')
 
 
 class TodoForm(FlaskForm):

@@ -157,6 +157,8 @@ class Sprint(db.Model):
     end_date = db.Column(db.Date)
     start_date = db.Column(db.Date)
     sprint_num = db.Column(db.Integer)
+    Retro = db.Column(db.String(200))
+    Review = db.Column(db.String(200))
     id = synonym('sprint_id')
     # Teams = db.relationship('Team', secondary=team_sprint_table, backref=db.backref('teamsprints', lazy='dynamic'))
     # user_stories = db.relationship('User_Stories', secondary=user_stories_sprint_table, backref=db.backref('sprintus', lazy='dynamic'))
