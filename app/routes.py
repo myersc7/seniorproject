@@ -101,10 +101,10 @@ def currentSprint(project_id: int):
 
     for sprint in curr:
         currSprint.append(sprint[0])
-    try:
-        return str(currSprint[0])
-    except IndexError:
-        return None
+    if not currSprint:
+        return ('create_sprint/' + project_id)
+    else:
+        return currSprint[0]
 
 
 def get_proj_name(project_id: int):
@@ -445,7 +445,7 @@ def delete_project(project_id):
         return redirect(url_for('index'))
 
 
-@app.route('/create_sprint/<project_id>', methods=['GET', 'POST'])
+@app.route('/sprint/create_sprint/<project_id>', methods=['GET', 'POST'])
 @login_required
 def create_sprint(project_id):
     next_sprint = int(currentSprintNum(project_id)) + 1
@@ -504,7 +504,7 @@ def team_endpoint(project_id):
 
     return render_template('team.html', title="Team", member_ids=member_ids, get_username=get_username,
                            get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role,
-                           project_id=project_id)
+                           project_id=project_id, get_role_id=get_role_id)
 
 @app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
 @login_required
@@ -522,22 +522,28 @@ def add_member(project_id):
         user_id = []
         for u in u_id:
             user_id.append(str(u[0]))
-        # if user_id is None:
-        #     flash("User not found!")
-        #     return redirect('/addmember/<project_id>')
-        # else:
-        db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
-        u_id = []
-        flash('Congratulations, you added a member!')
-        return redirect('/team/'+project_id)
+        if not user_id:
+            flash('User not found!')
+        else:
+            u_name = db.engine.execute("select team_user_table_id from team_user_table where team_id = "+team_id[0]+" and user_id = "+user_id[0])
+            usernames = []
+            for name in u_name:
+                usernames.append(name[0])
+            if not usernames:
+                db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
+                flash('Congratulations, you added a member!')
+                return redirect('/team/' + project_id)
+            else:
+                flash(username+' is already a member of the team')
 
-    team_id = []
     return render_template('AddMember.html', title='Add Member', form=form)
+
 
 
 @app.route('/sprint_manage/<project_id>')
 @login_required
 def sprint_manage_endpoint(project_id):
+
     sprints = db.engine.execute("select sprint_id from project_sprint_table "
                                 " where project_sprint_table.project_id = " + project_id)
     # may have to use an order by start date to get them in the proper order
