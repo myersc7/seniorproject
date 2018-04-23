@@ -139,8 +139,8 @@ class User_Stories(db.Model):
     # users = db.relationship('User', secondary=works_on, backref=db.backref('ususerr', lazy='dynamic'))
     sprints = db.relationship('Sprint', secondary=user_stories_sprint_table,
                               backref=db.backref('teamusers', lazy='dynamic'))
-    us_todo = db.relationship('To_do', backref=db.backref('usto_do'))
-    us_req = db.relationship('Requirements', backref=db.backref('us_req'))
+    #us_todo = db.relationship('To_do', backref=db.backref('usto_do'))
+    #us_req = db.relationship('Requirements', backref=db.backref('us_req'))
     projects = db.relationship('Project', secondary=user_stories_project_table,
                                backref=db.backref('usproj', lazy='dynamic'))
 
