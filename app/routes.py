@@ -44,7 +44,7 @@ def get_role(user_id):
     try:
         return role[0]
     except IndexError:
-        return 0
+        return 'None'
 
 
 def get_team_id(team_id):
