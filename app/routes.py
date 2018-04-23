@@ -77,10 +77,10 @@ def currentSprint(project_id: int):
 
     for sprint in curr:
         currSprint.append(sprint[0])
-    try:
-        return str(currSprint[0])
-    except IndexError:
-        return None
+    if not currSprint:
+        return ('create_sprint/'+project_id)
+    else:
+        return currSprint[0]
 
 
 def get_proj_name(project_id: int):
@@ -407,7 +407,7 @@ def delete_project(project_id):
         return redirect(url_for('index'))
 
 
-@app.route('/create_sprint/<project_id>', methods=['GET', 'POST'])
+@app.route('/sprint/create_sprint/<project_id>', methods=['GET', 'POST'])
 @login_required
 def create_sprint(project_id):
     next_sprint = int(currentSprintNum(project_id)) + 1
