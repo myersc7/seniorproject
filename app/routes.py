@@ -1,10 +1,27 @@
 from flask import render_template, flash, redirect, url_for, request, json
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, ProjectForm, SprintForm, User_StoriesForm, DodForm, AddMemberForm
+from app.forms import RetroForm, ReviewForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Project, Team, Sprint, User_Stories, Role
 from werkzeug.urls import url_parse
 import datetime
+
+def get_review(sprint_id):
+    review = db.engine.execute("select Review from sprint where sprint_id = " + sprint_id)
+    name = []
+    for n in review:
+        name.append(n[0])
+
+    return name[0]
+
+def get_retro(project_id):
+    retro = db.engine.execute("select Retro from sprint where sprint_id = " + sprint_id)
+    name = []
+    for n in retro:
+        name.append(n[0])
+
+    return name[0]
 
 def get_sprint_id(user_stories_id):
     sprint_id = db.engine.execute(
@@ -84,10 +101,10 @@ def currentSprint(project_id: int):
 
     for sprint in curr:
         currSprint.append(sprint[0])
-    try:
-        return str(currSprint[0])
-    except IndexError:
-        return None
+    if not currSprint:
+        return ('create_sprint/' + project_id)
+    else:
+        return currSprint[0]
 
 
 def get_proj_name(project_id: int):
@@ -428,7 +445,7 @@ def delete_project(project_id):
         return redirect(url_for('index'))
 
 
-@app.route('/create_sprint/<project_id>', methods=['GET', 'POST'])
+@app.route('/sprint/create_sprint/<project_id>', methods=['GET', 'POST'])
 @login_required
 def create_sprint(project_id):
     next_sprint = int(currentSprintNum(project_id)) + 1
@@ -488,7 +505,7 @@ def team_endpoint(project_id):
     return render_template('team.html', title="Team", member_ids=member_ids, get_username=get_username,
                            get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role,
                            project_id=project_id, get_role_id=get_role_id)
-
+  
 
 @app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
 @login_required
@@ -506,22 +523,28 @@ def add_member(project_id):
         user_id = []
         for u in u_id:
             user_id.append(str(u[0]))
-        # if user_id is None:
-        #     flash("User not found!")
-        #     return redirect('/addmember/<project_id>')
-        # else:
-        db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
-        u_id = []
-        flash('Congratulations, you added a member!')
-        return redirect('/team/'+project_id)
+        if not user_id:
+            flash('User not found!')
+        else:
+            u_name = db.engine.execute("select team_user_table_id from team_user_table where team_id = "+team_id[0]+" and user_id = "+user_id[0])
+            usernames = []
+            for name in u_name:
+                usernames.append(name[0])
+            if not usernames:
+                db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
+                flash('Congratulations, you added a member!')
+                return redirect('/team/' + project_id)
+            else:
+                flash(username+' is already a member of the team')
 
-    team_id = []
     return render_template('AddMember.html', title='Add Member', form=form)
+
 
 
 @app.route('/sprint_manage/<project_id>')
 @login_required
 def sprint_manage_endpoint(project_id):
+
     sprints = db.engine.execute("select sprint_id from project_sprint_table "
                                 " where project_sprint_table.project_id = " + project_id)
     # may have to use an order by start date to get them in the proper order
@@ -555,7 +578,7 @@ def get_sprint_num(sprint_id):
 
 @app.route('/sprint/<sprint_id>')
 @login_required
-def sprint_endpoint(sprint_id):
+def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
     '''
     if sprint_id is None:
         project_id = db.engine.execute("select project.project_id from project join team_project_table on"
@@ -566,6 +589,23 @@ def sprint_endpoint(sprint_id):
 
         return(redirect(url_for('create_sprint', project_id = project_id))
     '''
+    old_retro = Sprint.query.get(sprint_id)
+    sprintretro = RetroForm(obj=old_retro)
+    if sprintretro.validate_on_submit():
+        sprintretro.populate_obj(old_retro)
+        Retro = str(sprintretro.Retro.data)
+        db.engine.execute("UPDATE sprint SET Retro= \"" + Retro + "\" WHERE sprint_id= '" + sprint_id + "'")
+        flash("Sprint Retrospective added")
+        return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
+
+    old_review = Sprint.query.get(sprint_id)
+    sprintreview = ReviewForm(obj=old_review)
+    if sprintreview.validate_on_submit():
+        sprintreview.populate_obj(old_retro)
+        Review = str(sprintreview.Review.data)
+        db.engine.execute("UPDATE sprint SET Review= \"" + Review + "\" WHERE sprint_id= '" + sprint_id + "'")
+        flash("Sprint Review added")
+        return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
     project_id = str(
         db.engine.execute("select project_id from project_sprint_table where sprint_id ='" + sprint_id + "'").scalar())
@@ -607,7 +647,8 @@ def sprint_endpoint(sprint_id):
         prod_back_ids.append(prod_back[0])
     return render_template('Sprint.html', title="Sprint Page", project_id=project_id, todo=todo, inprogress=in_progress,
                            done=done, prod_back_ids=prod_back_ids, get_title=get_title, get_difficulty=get_difficulty,
-                           get_description=get_description, get_acceptance_criteria=get_acceptance_criteria)
+                           get_description=get_description, get_acceptance_criteria=get_acceptance_criteria,
+                           sprintretro=sprintretro, sprintreview=sprintreview)
 
 
 @app.route('/create_card/<project_id>', methods=['GET', 'POST'])

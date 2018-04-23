@@ -41,21 +41,16 @@
             '                </div>\n' +
             '            </div>\n' +
             '        </div>';
-
             objTo.appendChild(divtest)
         }
-
         var sprint = 1;
         function add_sprint() {
             sprint++;
             var objTo = document.getElementById('SprintList')
             var divtest = document.createElement("div");
             divtest.innerHTML = '<a href="#" class="button sprint-button hvr-shrink">Sprint {{p}}</a>';
-
             objTo.appendChild(divtest)
         }
-
-
     </script>
 </head>
 <body>
@@ -175,7 +170,7 @@
     </div>
 
 
-    <a href="/create_sprint/{{project_id}}" class="button sprint-button hvr-shrink" onclick="add_sprint();" >+ Create New Sprint</a>
+   <a href="/sprint/create_sprint/{{project_id}}" class="button sprint-button hvr-shrink" onclick="add_sprint();" >+ Create New Sprint</a>
 
 </div>
 

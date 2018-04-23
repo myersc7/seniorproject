@@ -128,12 +128,12 @@ class Requirements(db.Model):
 class User_Stories(db.Model):
     __tablename__ = 'user_stories'
     user_stories_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    acceptance_criteria = db.Column(db.String(45))
-    status = db.Column(db.String(45))
+    Acceptance_criteria = db.Column(db.String(45))
+    Status = db.Column(db.String(45))
     title = db.Column(db.String(45))
-    description = db.Column(db.String(400))
-    github_link = db.Column(db.String(100))
-    difficulty = db.Column(db.Integer)
+    Description = db.Column(db.String(400))
+    Github_link = db.Column(db.String(100))
+    Difficulty = db.Column(db.Integer)
     id = synonym('user_stories_id')
 
     # users = db.relationship('User', secondary=works_on, backref=db.backref('ususerr', lazy='dynamic'))
@@ -159,6 +159,8 @@ class Sprint(db.Model):
     end_date = db.Column(db.Date)
     start_date = db.Column(db.Date)
     sprint_num = db.Column(db.Integer)
+    Retro = db.Column(db.String(200))
+    Review = db.Column(db.String(200))
     id = synonym('sprint_id')
     # Teams = db.relationship('Team', secondary=team_sprint_table, backref=db.backref('teamsprints', lazy='dynamic'))
     # user_stories = db.relationship('User_Stories', secondary=user_stories_sprint_table, backref=db.backref('sprintus', lazy='dynamic'))
