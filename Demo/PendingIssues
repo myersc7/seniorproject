@@ -5,7 +5,3 @@ Issues
 4.  Unable to remove a role from a team member.
 5.  "Add Role" adds a role to the first person in the list.
 6.  When updating cards, it gives a bad URL.
-
-
-Future Plans:
-1.  Finish implementing Sprint Review/Retro Functionality
