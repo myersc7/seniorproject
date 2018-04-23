@@ -107,7 +107,7 @@ def currentSprint(project_id: int):
     if not currSprint:
         return ('/create_sprint/' + project_id)
     else:
-        return ('/sprint/' + currSprint[0])
+        return ('/sprint/' + str(currSprint[0]))
 
 
 def get_proj_name(project_id: int):
@@ -383,6 +383,7 @@ def project_endpoint(project_id):
 
     total = 0
     for num in sprints:
+
         little = db.engine.execute("select SUM(difficulty) from user_stories "
                                    " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id) "
                                    " join sprint on (user_stories_sprint_table.sprint_id = sprint.sprint_id) "
@@ -390,22 +391,25 @@ def project_endpoint(project_id):
                                    " join project on (project_sprint_table.project_id = project.project_id) "
                                    " where project.project_id = '" + project_id + "' and sprint.sprint_num = '"
                                    + str(num) + "'").scalar()
-        # try:
-        #   return str(currSprint[0])
-        # except IndexError:
-        #   return None
-        total = total + int(little)
+        try:
+            total = total + int(little)
+        except TypeError:
+            total = total
         completeDiff.append(total)
 
     for num in sprints_num2:
-        totalDiff.append(int(big))
+        try:
+            totalDiff.append(int(big))
+        except TypeError:
+            totalDiff.append(0)
 
     # totalDiff = [50, 65, 80, 70]
     # completeDiff = [0, 20, 33, 55]
     # sprints = [1, 2, 3, 4]
     return render_template('project.html', title="Project page", get_proj_name=get_proj_name,
                            currentSprint=currentSprint, project_id=project_id,
-                           sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff, form=form, get_dod=get_dod)
+                           sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff, form=form, get_dod=get_dod,
+                           edit_githublink=edit_githublink)
 
 
 @app.route('/create_project', methods=['GET', 'POST'])
@@ -472,17 +476,22 @@ def create_sprint(project_id):
     return render_template('CreateSprint.html', title='Create Sprint', form=form, project_id=project_id, sprint_id=next_sprint_id)
 
 
-@app.route('/delete_card')  # Pop up with warning and confirmation
+@app.route('/delete_card/<user_stories_id>')  # Pop up with warning and confirmation
 def delete_card(user_stories_id):
-    db.engine.execute("delete * from user_stories where user_stories.user_stories_id = " + user_stories_id)
+    project_id = str(db.engine.execute("select project_id from user_stories_project_table "
+                      " where user_stories_id = '" + user_stories_id + "'").scalar())
+    db.engine.execute("delete from user_stories_project_table WHERE user_stories_id= '" + user_stories_id + "'")
     db.engine.execute(
-        "delete * from user_stories_sprint_table where user_stories_sprint_table.user_stories_id = " + user_stories_id)
-    db.engine.execute(
-        "delete * from user_user_stories_table where user_user_stories_table.user_stories_id = " + user_stories_id)
-    db.engine.execute("delete * from to_do where to_do.user_stories_id = " + user_stories_id)
-    db.engine.execute("delete * from works_on where works_on.user_stories_id = " + user_stories_id)
-    db.engine.execute("delete * from requirements where requirements.user_stories_id = " + user_stories_id)
+        "delete from user_stories_sprint_table where user_stories_id= '" + user_stories_id + "'")
+    user_stories = User_Stories.query.filter_by(user_stories_id=user_stories_id).first()
 
+    if not user_stories:
+        flash('User Story not found!')
+
+    db.session.delete(user_stories)
+    db.session.commit()
+    flash('User Story successfully deleted!')
+    return redirect(url_for('sprint_manage_endpoint', project_id=project_id))
 
 @app.route('/team/<project_id>')
 @login_required
@@ -722,7 +731,6 @@ def remove_role(role_id, project_id, team_id, user_id):
     return redirect(url_for('team_endpoint', project_id=project_id))
 
 
-@app.route('/edit_githublink/<project_id>/<path:github_link>', methods=['GET', 'POST'])
 def edit_githublink(project_id, github_link):
     proj = Project.query.filter_by(project_id=project_id).first()
 
