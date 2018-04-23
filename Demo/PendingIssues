@@ -3,3 +3,4 @@
 3.  Add Member button doesn't work if the user you are trying to add doesn't exist.
 4.  Sprint Review/Retro does not have functionality.
 5.  Current Sprint button doesn't work.
+6.  When adding a member to the team, it is currently possible to add the same member muiltiple times
