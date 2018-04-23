@@ -39,12 +39,12 @@ class User_StoriesForm(FlaskForm):
 
 
 class ReviewForm(FlaskForm):
-    Review = StringField('Review', validators=[DataRequired()])
+    Review = TextAreaField('Review', validators=[DataRequired()])
     submit = SubmitField('Save')
 
 
 class RetroForm(FlaskForm):
-    Retro = StringField('Retro', validators=[DataRequired()])
+    Retro = TextAreaField('Retro', validators=[DataRequired()])
     submit = SubmitField('Save')
 
 
