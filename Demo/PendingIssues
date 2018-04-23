@@ -1,6 +1,6 @@
-1.  If a sprint has no cards, burnup crashes.
+1.  If a sprint has no cards, the burnup chart crashes.
 2.  If you put something back into Product Backlog, it counts for current sprint on the burnup.
-
 3.  Sprint Review/Retro does not have functionality.
 4.  Current Sprint button doesn't work.
-
+5.  Create Sprint URL doesn't use CSS styling.
+6.  
