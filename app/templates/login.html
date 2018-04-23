@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+        <a class="navbar-brand" href="/index">Agility</a>
+        <ul class="navbar-nav mr-auto">
+
+        </ul>
+        <ul class="navbar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+        </ul>
+    </nav>
+
     <h1>Sign In</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
@@ -7,18 +22,18 @@
             {{ form.username.label }}<br>
             {{ form.username(size=45) }}<br>
             {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+                <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p align="center">
             {{ form.password.label }}<br>
             {{ form.password(size=45) }}<br>
             {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+                <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p align="center">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p align="center">{{ form.submit() }}</p>
-	    <p align="center">New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
+        <p align="center">New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
     </form>
 {% endblock %}

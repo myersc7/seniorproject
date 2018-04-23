@@ -22,6 +22,10 @@
     {% endif %}
 </head>
 <body>
+
+{#
+
+
 {% if title != 'Sign In' %}
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
     <a class="navbar-brand" href="{{ url_for('index') }}">Agility</a>
@@ -49,6 +53,9 @@
     </ul>
 </nav>
 {% endif %}
+
+#}
+
 
 {% block content %}{% endblock %}
 

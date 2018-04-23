@@ -10,7 +10,8 @@ team_project_table = db.Table('team_project_table',
 
 team_user_table = db.Table('team_user_table',
                            db.Column('user_id', db.Integer, db.ForeignKey('user.user_id')),
-                           db.Column('team_id', db.Integer, db.ForeignKey('team.team_id'))
+                           db.Column('team_id', db.Integer, db.ForeignKey('team.team_id')),
+                           db.Column('role_id', db.Integer, db.ForeignKey('role.role_id'))
                            )
 
 team_sprint_table = db.Table('team_sprint_table',
@@ -106,20 +107,20 @@ class Team(db.Model):
 
 class To_do(db.Model):
     __tablename__ = 'to_do'
-    idto_do = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    to_do_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status = db.Column(db.Boolean)
     text = db.Column(db.String(45))
-    id = synonym('idto_do')
+    id = synonym('to_do_id')
     user_stories_id = db.Column(db.Integer, db.ForeignKey('user_stories.user_stories_id'))
     # todo_us = db.relationship('User_Stories', backref=db.backref('todo_userstories', lazy='dynamic'))
 
 
 class Requirements(db.Model):
     __tablename__ = 'requirements'
-    idrequirements = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    requirements_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status = db.Column(db.Boolean)
     text = db.Column(db.String(45))
-    id = synonym('idrequirements')
+    id = synonym('requirements_id')
     user_stories_id = db.Column(db.Integer, db.ForeignKey('user_stories.user_stories_id'))
     # req_us = db.relationship('User_Stories', backref=db.backref('req_userstories', lazy='dynamic'))
 
@@ -127,13 +128,14 @@ class Requirements(db.Model):
 class User_Stories(db.Model):
     __tablename__ = 'user_stories'
     user_stories_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Acceptance_criteria = db.Column(db.String(45))
-    Status = db.Column(db.String(45))
+    acceptance_criteria = db.Column(db.String(45))
+    status = db.Column(db.String(45))
     title = db.Column(db.String(45))
-    Description = db.Column(db.String(400))
-    Github_link = db.Column(db.String(100))
-    Difficulty = db.Column(db.Integer)
+    description = db.Column(db.String(400))
+    github_link = db.Column(db.String(100))
+    difficulty = db.Column(db.Integer)
     id = synonym('user_stories_id')
+
     # users = db.relationship('User', secondary=works_on, backref=db.backref('ususerr', lazy='dynamic'))
     sprints = db.relationship('Sprint', secondary=user_stories_sprint_table,
                               backref=db.backref('teamusers', lazy='dynamic'))

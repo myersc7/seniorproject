@@ -1,30 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
-<body>
+    <body>
 
-<h1>Create User Story</h1>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+        <a class="navbar-brand" href="/index">Agility</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/project/{{ project_id }}">Project</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/sprint_manage/{{ project_id }}">Sprint Management</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/sprint/{{ project_id }}">Sprint Page</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/team/{{ project_id }}">Team Page</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+        </ul>
+    </nav>
+
+    <h1>Create User Story</h1>
 
     <div class="container">
-    <form align="center" action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.title.label }}<br>
-             {{ form.title(size=45) }}<br>
-        </p>
-        <p>
-            {{ form.Difficulty.label }}<br>
-            {{ form.Difficulty(size=45) }}<br>
-        </p>
-        <p>
-            {{ form.Description.label }}<br>
-            {{ form.Description(size=45) }}<br>
-        </p>
-        <p>
-            {{ form.Acceptance_criteria.label }}<br>
-            {{ form.Acceptance_criteria(cols="50", rows="10") }}<br>
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+        <form align="center" action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.title.label }}<br>
+                {{ form.title(size=45) }}<br>
+            </p>
+            <p>
+                {{ form.Difficulty.label }}<br>
+                {{ form.Difficulty(size=45) }}<br>
+            </p>
+            <p>
+                {{ form.Description.label }}<br>
+                {{ form.Description(size=45) }}<br>
+            </p>
+            <p>
+                {{ form.Acceptance_criteria.label }}<br>
+                {{ form.Acceptance_criteria(cols="50", rows="10") }}<br>
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>
     </div>
 {% endblock %}
 </body>
