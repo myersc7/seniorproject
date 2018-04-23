@@ -17,8 +17,8 @@ def get_sprint_id(user_stories_id):
 
 def get_role(user_id):
     role_title = db.engine.execute('select role.title from role '
-                                   'join role_user_table on (role_user_table.role_id = role.role_id) '
-                                   'join user on (role_user_table.user_id = user.user_id)'
+                                   'join team_user_table on (team_user_table.role_id = role.role_id) '
+                                   'join user on (team_user_table.user_id = user.user_id)'
                                    'where user.user_id = ' + user_id)
 
     role = []
@@ -637,7 +637,7 @@ def get_role_id(role_title):
         return 'None'
 
 
-@app.route('/assign_role/<team_id>/<project_id>/<user_id>/<role_id>')
+@app.route('/assign_role/<team_id>/<project_id>/<user_id>/<role_id>', methods=['GET', 'POST'])
 @login_required
 def assign_role(team_id, project_id, role_id, user_id):
     role = Role.query.filter_by(role_id=role_id).first()
@@ -653,7 +653,7 @@ def assign_role(team_id, project_id, role_id, user_id):
     return redirect(url_for('team_endpoint', project_id=project_id))  # Title conflicts with title for html?
 
 
-@app.route('/remove_role/<role_id>/<project_id>/<team_id>/<user_id>')
+@app.route('/remove_role/<role_id>/<project_id>/<team_id>/<user_id>', methods=['GET', 'POST'])
 @login_required
 def remove_role(role_id, project_id, team_id, user_id):
     # Make a role unique so its easier to maintain
