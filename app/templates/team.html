@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<body>
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
@@ -22,6 +21,8 @@
     </ul>
 </nav>
 
+<body>
+
 <h1>{{ get_team_name(t_id[0]|string) }}</h1>
 <div class ="center"><p>Project Members</p></div>
 
@@ -38,8 +39,8 @@
                     <select name="myList" id="ddl_rolelist">
                         <!-- /assign_role/teamid/projid/userid/roleid -->
                         <option id="Scrum Master" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Scrum Master") }}">Scrum Master</option>
-                        <option value="Product Owner" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Product Owner") }}">Product Owner</option>
-                        <option value="Developer" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Developer") }}">Developer</option>
+                        <option id="Product Owner" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Product Owner") }}">Product Owner</option>
+                        <option id="Developer" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Developer") }}">Developer</option>
                     </select>
                     <input type="button" onclick="goto_link(document.getElementById('ddl_rolelist').value)" value="Assign Role">
                 </p>
@@ -57,7 +58,7 @@
 
 <script>
     function goto_link(href){
-        window.location.replace(href)
+        window.location.replace(href);
     }
 </script>
 
