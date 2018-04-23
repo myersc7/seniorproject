@@ -487,9 +487,16 @@ def add_member(project_id):
         if not user_id:
             flash('User not found!')
         else:
-            db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
-            flash('Congratulations, you added a member!')
-            return redirect('/team/' + project_id)
+            u_name = db.engine.execute("select team_user_table_id from team_user_table where team_id = "+team_id[0]+" and user_id = "+user_id[0])
+            usernames = []
+            for name in u_name:
+                usernames.append(name[0])
+            if not usernames:
+                db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
+                flash('Congratulations, you added a member!')
+                return redirect('/team/' + project_id)
+            else:
+                flash(username+' is already a member of the team')
 
     return render_template('AddMember.html', title='Add Member', form=form)
 
