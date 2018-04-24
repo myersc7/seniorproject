@@ -33,7 +33,7 @@ class User_StoriesForm(FlaskForm):
     Difficulty = IntegerField('Difficulty', validators=[DataRequired()])
     Acceptance_criteria = TextAreaField('Acceptance Criteria', validators=[DataRequired()])
     status = StringField('Status')
-    Description = StringField('Description', validators=[DataRequired()])
+    Description = TextAreaField('Description', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
