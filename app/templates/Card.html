@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
 
-        <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
     <link type="text/css" rel="stylesheet" href="../static/css/bootstrap.min.css">
 
     {#<!-- Bootstrap Grid CSS -->
@@ -22,31 +22,49 @@
 </head>
 <body>
 
+<!-- Navbar -->
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-    <a class="navbar-brand" href="#">Agility</a>
+    <a class="navbar-brand" href="/index">Agility</a>
     <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-            <a class="nav-link" href="#">Sprint Management</a>
+            <a class="nav-link" href="/project/{{ project_id }}">Project</a>
         </li>
+
         <li class="nav-item">
-            <a class="nav-link" href="#">Team Page</a>
+            <a class="nav-link" href="/sprint_manage/{{ project_id }}">Sprint Management</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/sprint/{{ project_id }}">Sprint Page</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/team/{{ project_id }}">Team Page</a>
         </li>
     </ul>
     <ul class="navbar-nav">
 
         <li class="nav-item">
-            <a class="nav-link" href="#">Log Out</a>
+            <a class="nav-link" href="/logout">Log Out</a>
         </li>
     </ul>
 </nav>
 
 
-        <!-- Header w/ Card Title -->
+<!-- Header w/ Card Title -->
+<form align="center" action="" method="post">
+    <div class="center">
         <div class="container">
-            <textarea class="form-control" id="message-text" style="height:50px">{{ get_title(user_stories_id|string) }}</textarea>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            {{ form.hidden_tag() }}
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Title:</span>
+                </div>
+                {{ form.title(class="title") }}
+            </div>
+            {#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>#}
         </div>
         <!-- Body w/ Difficulty, Description, Acceptance Criteria -->
         <div class="container">
@@ -54,40 +72,46 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Difficulty:</span>
                 </div>
-                <input type="number" class="form-control" aria-label="With textarea" value = {{ get_difficulty(user_stories_id|string) }}>
-                <!-- Dropdown -->
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown button
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="/PBI/{{ user_stories_id}}">Product Backlog</a>
-                        <a class="dropdown-item" href="/To_do/{{ user_stories_id }}">Todo</a>
-                        <a class="dropdown-item" href="/In_p/{{ user_stories_id }}">In Progress</a>
-                        <a class="dropdown-item" href="/Done/{{ user_stories_id }}">Done</a>
-                    </div>
-                </div>
+                {{ form.Difficulty(class_="difficulty") }}
             </div>
             <!-- 2 columns w/ Description and Acceptance Criteria -->
             <div class="row">
                 <div class="col">
                     <h5  id="CardDetails title">Description</h5>
-                    <textarea class="form-control" id="message-text" style="height:500px">{{ get_description(user_stories_id|string) }}</textarea>
+                    {{ form.Description(cols="35", rows="20") }}
                 </div>
                 <div class="col">
-                    <h5  id="CardDetails title">Acceptance Criteria</h5>
-                    <textarea class="form-control" id="message-text" style="height:500px"> {{ get_acceptance_criteria(user_stories_id|string) }}</textarea>
+                    <h5  id="CardDetails title">Acceptance Criteria</h5>>
+                    {{ form.Acceptance_criteria(cols="35", rows="20") }}
                 </div>
             </div>
         </div>
-        <!-- Footer w/ "Save Changes" button -->
-        <div class="container">
-            <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+        <div class="btn-group">
+            <!-- Footer w/ "Save Changes" button -->
+            {{ form.submit(class_="button") }}
+            <!-- Dropdown -->
+            <div class="dropdown">
+                <button class="button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Place in...
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/PBI/{{ user_stories_id}}">Product Backlog</a>
+                    <a class="dropdown-item" href="/To_do/{{ user_stories_id }}">Todo</a>
+                    <a class="dropdown-item" href="/In_p/{{ user_stories_id }}">In Progress</a>
+                    <a class="dropdown-item" href="/Done/{{ user_stories_id }}">Done</a>
+                </div>
+            </div>
+            <!-- Delete Button -->
+            {#<button class="button" href={{ delete_card(user_stories_id) }}>
+                Delete Card
+            </button>#}
+        </div>
+    </div>
+</form>
 
-    <!-- Scripts -->
-    <script src="../static/js/jquery-3.3.1.js"></script>
-    <script src="../static/js/bootstrap.bundle.min.js"></script>
+<!-- Scripts -->
+<script src="../static/js/jquery-3.3.1.js"></script>
+<script src="../static/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
