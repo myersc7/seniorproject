@@ -34,17 +34,25 @@
             <!-- add check if user's role is null show drop down list if not just get role and display -->
 
             {% if get_role(p|string) == 'None' %}
-            <form action="" method="post">
+            <div class="dropdown">
+                <button class="button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Place in...
+                </button>
                 <p>Role:
-                    <select name="myList" id="ddl_rolelist">
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Scrum Master") }}">Scrum Master</a>
+                        <a class="dropdown-item" href="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Product Owner") }}">Product Owner</a>
+                        <a class="dropdown-item" href="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Developer") }}">Developer</a>
+                    </div>
+                {#<select name="myList" id="ddl_rolelist">
                         <!-- /assign_role/teamid/projid/userid/roleid -->
                         <option id="Scrum Master" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Scrum Master") }}">Scrum Master</option>
                         <option id="Product Owner" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Product Owner") }}">Product Owner</option>
                         <option id="Developer" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Developer") }}">Developer</option>
                     </select>
                     <input type="button" onclick="goto_link(document.getElementById('ddl_rolelist').value)" value="Assign Role">
-                </p>
-            </form>
+                    </p>#}
+            </div>
             {% else %}
                 <!-- /remove_role/roleid/projid/teamid/userid -->
                 <p>Role: {{ get_role(p|string) }} <a href="/remove_role/{{ get_role_id(get_role(p|string)) }}/{{ project_id }}/{{ t_id[0]|string }}/{{ p }}" class="button" onclick="return confirm('Are you sure?')">Remove Role</a></p>
