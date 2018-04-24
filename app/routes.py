@@ -284,7 +284,7 @@ def card(user_stories_id):
         db.engine.execute("UPDATE user_stories SET title= \"" + title + "\" , Difficulty = \"" + difficulty + "\" , Description = \""
         + description + "\" , Acceptance_criteria = \"" + acc_crit + "\" WHERE user_stories_id= '" + user_stories_id + "'")
         return redirect(url_for("card", user_stories_id=user_stories_id))
-    return render_template('Card.html', title="card", form = form, user_stories_id=user_stories_id)
+    return render_template('Card.html', title="card", form = form, user_stories_id=user_stories_id, delete_card=delete_card)
 
 
 @app.route('/')
@@ -390,7 +390,7 @@ def project_endpoint(project_id):
                                    " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id) "
                                    " join project on (project_sprint_table.project_id = project.project_id) "
                                    " where project.project_id = '" + project_id + "' and sprint.sprint_num = '"
-                                   + str(num) + "'").scalar()
+                                   + str(num) + "' and status = 'Done'").scalar()
         try:
             total = total + int(little)
         except TypeError:
@@ -480,9 +480,13 @@ def create_sprint(project_id):
 def delete_card(user_stories_id):
     project_id = str(db.engine.execute("select project_id from user_stories_project_table "
                       " where user_stories_id = '" + user_stories_id + "'").scalar())
+    status = str(db.engine.execute("select status from user_stories where user_stories_id ='" + user_stories_id + "'"))
+    if status != 'PBI':
+        db.engine.execute(
+            "delete from user_stories_sprint_table where user_stories_id= '" + user_stories_id + "'")
+
     db.engine.execute("delete from user_stories_project_table WHERE user_stories_id= '" + user_stories_id + "'")
-    db.engine.execute(
-        "delete from user_stories_sprint_table where user_stories_id= '" + user_stories_id + "'")
+
     user_stories = User_Stories.query.filter_by(user_stories_id=user_stories_id).first()
 
     if not user_stories:

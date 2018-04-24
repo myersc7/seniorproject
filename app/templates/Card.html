@@ -35,10 +35,6 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/sprint/{{ project_id }}">Sprint Page</a>
-        </li>
-
-        <li class="nav-item">
             <a class="nav-link" href="/team/{{ project_id }}">Team Page</a>
         </li>
     </ul>
@@ -53,24 +49,46 @@
 
 <!-- Header w/ Card Title -->
 <form align="center" action="" method="post">
-    <div class="container">
-        {{ form.hidden_tag() }}
-        {{ form.title }}
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <!-- Body w/ Difficulty, Description, Acceptance Criteria -->
-    <div class="container">
-        <div class="input-group input-group-sm">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Difficulty:</span>
+    <div class="center">
+        <div class="container">
+            {{ form.hidden_tag() }}
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Title:</span>
+                </div>
+                {{ form.title(class="title") }}
             </div>
-            {{ form.Difficulty }}
+            {#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>#}
+        </div>
+        <!-- Body w/ Difficulty, Description, Acceptance Criteria -->
+        <div class="container">
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Difficulty:</span>
+                </div>
+                {{ form.Difficulty(class_="difficulty") }}
+            </div>
+            <!-- 2 columns w/ Description and Acceptance Criteria -->
+            <div class="row">
+                <div class="col">
+                    <h5  id="CardDetails title">Description</h5>
+                    {{ form.Description(cols="35", rows="20") }}
+                </div>
+                <div class="col">
+                    <h5  id="CardDetails title">Acceptance Criteria</h5>>
+                    {{ form.Acceptance_criteria(cols="35", rows="20") }}
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <!-- Footer w/ "Save Changes" button -->
+            {{ form.submit(class_="button") }}
             <!-- Dropdown -->
             <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown button
+                <button class="button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Place in...
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="/PBI/{{ user_stories_id}}">Product Backlog</a>
@@ -79,21 +97,11 @@
                     <a class="dropdown-item" href="/Done/{{ user_stories_id }}">Done</a>
                 </div>
             </div>
-        </div>
-        <!-- 2 columns w/ Description and Acceptance Criteria -->
-        <div class="row">
-            <div class="col">
-                <h5  id="CardDetails title">Description</h5>
-                {{ form.Description(cols="35", rows="10") }}
-            </div>
-            <div class="col">
-                <h5  id="CardDetails title">Acceptance Criteria</h5>>
-                {{ form.Acceptance_criteria(cols="35", rows="20") }}
-            </div>
+            <!-- Delete Button -->
+            <a class="button sprint-button hvr-shrink" href="/delete_card/{{user_stories_id}}">Delete Card</a>
+            </a>
         </div>
     </div>
-    <!-- Footer w/ "Save Changes" button -->
-    {{ form.submit() }}
 </form>
 
 <!-- Scripts -->
