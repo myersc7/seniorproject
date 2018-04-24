@@ -93,6 +93,7 @@ class Project(db.Model):
     teams = db.relationship('Team', secondary=team_project_table, backref=db.backref('projteams', lazy='dynamic'))
     sprints = db.relationship('Sprint', secondary=project_sprint_table,
                               backref=db.backref('projsprint', lazy='dynamic'))
+    # userstories = db.relationship('UserStories', secondary=user_stories_project_table, backred=db.backref('projuserstroies', lazy='dynamic'))
 
 
 class Team(db.Model):
