@@ -35,11 +35,10 @@ def get_sprint_id(user_stories_id):
     except IndexError:
         return 'None'
 
-def get_role(user_id):
+def get_role(user_id, team_id):
     role_title = db.engine.execute('select role.title from role '
                                    'join team_user_table on (team_user_table.role_id = role.role_id) '
-                                   'join user on (team_user_table.user_id = user.user_id)'
-                                   'where user.user_id = ' + user_id)
+                                   'where team_user_table.user_id = ' + user_id + " and team_user_table.team_id =" + team_id)
 
     role = []
     for r in role_title:

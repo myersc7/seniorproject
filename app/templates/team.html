@@ -33,7 +33,7 @@
     		<p>Email: {{ get_email(p|string) }}</p>
             <!-- add check if user's role is null show drop down list if not just get role and display -->
 
-            {% if get_role(p|string) == 'None' %}
+            {% if get_role(p|string, t_id[0]|string) == 'None' %}
             <div class="dropdown">
                 <button class="button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Place in...
@@ -55,7 +55,7 @@
             </div>
             {% else %}
                 <!-- /remove_role/roleid/projid/teamid/userid -->
-                <p>Role: {{ get_role(p|string) }} <a href="/remove_role/{{ get_role_id(get_role(p|string)) }}/{{ project_id }}/{{ t_id[0]|string }}/{{ p }}" class="button" onclick="return confirm('Are you sure?')">Remove Role</a></p>
+                <p>Role: {{ get_role(p|string, t_id[0]|string) }} <a href="/remove_role/{{ get_role_id(get_role(p|string, t_id[0]|string)) }}/{{ project_id }}/{{ t_id[0]|string }}/{{ p }}" class="button" onclick="return confirm('Are you sure?')">Remove Role</a></p>
 
             {% endif %}
 	</div>
