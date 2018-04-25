@@ -1,11 +1,11 @@
-from flask import render_template, flash, redirect, url_for, request, json
+from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, ProjectForm, SprintForm, User_StoriesForm, DodForm, AddMemberForm
 from app.forms import RetroForm, ReviewForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Project, Team, Sprint, User_Stories, Role
 from werkzeug.urls import url_parse
-import datetime
+
 
 def get_review(sprint_id):
     review = db.engine.execute("select Review from sprint where sprint_id = " + sprint_id)
@@ -15,13 +15,15 @@ def get_review(sprint_id):
 
     return name[0]
 
-def get_retro(project_id):
+
+def get_retro(sprint_id):
     retro = db.engine.execute("select Retro from sprint where sprint_id = " + sprint_id)
     name = []
     for n in retro:
         name.append(n[0])
 
     return name[0]
+
 
 def get_sprint_id(user_stories_id):
     sprint_id = db.engine.execute(
@@ -35,6 +37,17 @@ def get_sprint_id(user_stories_id):
     except IndexError:
         return 'None'
 
+
+def get_sprint_num(sprint_id):
+    sprint_num = db.engine.execute("select sprint_num from sprint where sprint_id = " + sprint_id)
+
+    sprint = []
+    for s in sprint_num:
+        sprint.append(s[0])
+
+    return sprint[0]
+
+
 def get_role(user_id, team_id):
     role_title = db.engine.execute('select role.title from role '
                                    'join team_user_table on (team_user_table.role_id = role.role_id) '
@@ -47,15 +60,6 @@ def get_role(user_id, team_id):
         return role[0]
     except IndexError:
         return 'None'
-
-
-def get_team_id(team_id):
-    team_id = db.engine.execute("select team_id from team where team.team_id = " + team_id)
-    t_id = []
-    for id in team_id:
-        t_id.append(id[0])
-
-    return t_id[0]
 
 
 def get_team_name(team_id):
@@ -179,11 +183,13 @@ def get_email(user_id):
 @login_required
 def PBI(user_stories_id: int):
     project_id = str(db.engine.execute(
-        "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
+        "Select project_id from user_stories_project_table"
+        " where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
     curr = db.engine.execute(
-        "Select sprint.sprint_id from sprint join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
-        "join project on (project_sprint_table.project_id = project.project_id)"
-        "where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
+        "Select sprint.sprint_id from sprint"
+        " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+        " join project on (project_sprint_table.project_id = project.project_id)"
+        " where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
 
     currSprint = []
     for sprint in curr:
@@ -194,9 +200,7 @@ def PBI(user_stories_id: int):
         sprint_id = str(sprint[0])
     db.engine.execute("UPDATE user_stories SET Status='PBI' WHERE user_stories_id= '" + user_stories_id + "'")
     db.engine.execute("UPDATE user_stories_sprint_table SET sprint_id = NULL WHERE user_stories_id= '" + str(user_stories_id) + "'")
-    #db.engine.execute("insert into user_stories_sprint_table (sprint_id, user_stories_id) values ('" + str(sprint[0] + "', '" + user_stories_id + "')"))
-    #db.session.add(stmt)
-    #db.session.commit()
+
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
 
@@ -205,11 +209,13 @@ def PBI(user_stories_id: int):
 def To_do(user_stories_id: int):
 
     project_id = str(db.engine.execute(
-        "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
+        "Select project_id from user_stories_project_table"
+        " where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
     curr = db.engine.execute(
-        "Select sprint.sprint_id from sprint join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
-        "join project on (project_sprint_table.project_id = project.project_id)"
-        "where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
+        "Select sprint.sprint_id from sprint"
+        " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+        " join project on (project_sprint_table.project_id = project.project_id)"
+        " where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
 
     currSprint = []
     for sprint in curr:
@@ -221,8 +227,7 @@ def To_do(user_stories_id: int):
     db.engine.execute("UPDATE user_stories SET Status='To do' WHERE user_stories_id= '" + user_stories_id + "'")
     db.engine.execute(
         "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(user_stories_id) + "'")
-    #db.session.add(stmt)
-    #db.session.commit()
+
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
 
@@ -245,8 +250,7 @@ def In_p(user_stories_id: int):
     db.engine.execute("UPDATE user_stories SET Status='In Progress' WHERE user_stories_id= '" + user_stories_id + "'")
     db.engine.execute(
         "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(user_stories_id) + "'")
-    #db.session.add(stmt)
-    #db.session.commit()
+
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
 
@@ -269,8 +273,7 @@ def Done(user_stories_id: int):
     db.engine.execute("UPDATE user_stories SET Status='Done' WHERE user_stories_id= '" + user_stories_id + "'")
     db.engine.execute(
         "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(user_stories_id) + "'")
-    #db.session.add(stmt)
-    #db.session.commit()
+
     return redirect(url_for('sprint_endpoint', sprint_id= sprint_id))
 
 
@@ -295,10 +298,10 @@ def card(user_stories_id):
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    proj_ids = db.engine.execute("select project.project_id from project join team_project_table on"
-                                 " (project.project_id = team_project_table.project_id) join team on"
-                                 " (team_project_table.team_id = team.team_id) join team_user_table on"
-                                 " (team.team_id = team_user_table.team_id) where team_user_table.user_id = " + current_user.get_id())
+    proj_ids = db.engine.execute("select project.project_id from project"
+                                 " join team_project_table on  (project.project_id = team_project_table.project_id)"
+                                 " join team on (team_project_table.team_id = team.team_id)"
+                                 " join team_user_table on (team.team_id = team_user_table.team_id) where team_user_table.user_id = " + current_user.get_id())
 
     project_ids = []
     for pid in proj_ids:
@@ -407,9 +410,6 @@ def project_endpoint(project_id):
         except TypeError:
             totalDiff.append(0)
 
-    # totalDiff = [50, 65, 80, 70]
-    # completeDiff = [0, 20, 33, 55]
-    # sprints = [1, 2, 3, 4]
     return render_template('project.html', title="Project page", get_proj_name=get_proj_name,
                            currentSprint=currentSprint, project_id=project_id,
                            sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff, form=form, get_dod=get_dod,
@@ -467,28 +467,30 @@ def create_sprint(project_id):
         db.session.add(sprint)
         sprint.projects.append(project)
         db.session.commit()
-        next_sprint_id = str(db.engine.execute("select sprint.sprint_id from sprint "
-                                  " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
-                                  " where sprint.sprint_num = '" + str(next_sprint) +
-                                  "' and project_sprint_table.project_id ='" + str(project_id) + "'").scalar())
+        next_sprint_id = str(db.engine.execute("select sprint.sprint_id from sprint"
+                                               " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+                                               " where sprint.sprint_num = '" + str(next_sprint) +
+                                               "' and project_sprint_table.project_id ='" + str(project_id) + "'").scalar())
         flash('Congratulations, you made a sprint!')
         return redirect(url_for('sprint_endpoint', sprint_id=str(next_sprint_id)))
+
     next_sprint_id = str(db.engine.execute("select sprint.sprint_id from sprint "
                                            " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
                                            " where sprint.sprint_num = '" + str(next_sprint) +
                                            "' and project_sprint_table.project_id ='" + str(project_id) + "'"))
+
     return render_template('CreateSprint.html', title='Create Sprint', form=form, project_id=project_id, sprint_id=next_sprint_id)
 
 
 @app.route('/delete_card/<user_stories_id>')  # Pop up with warning and confirmation
 @login_required
 def delete_card(user_stories_id):
-    project_id = str(db.engine.execute("select project_id from user_stories_project_table "
-                      " where user_stories_id = '" + user_stories_id + "'").scalar())
+    project_id = str(db.engine.execute("select project_id from user_stories_project_table"
+                                       " where user_stories_id = '" + user_stories_id + "'").scalar())
     status = str(db.engine.execute("select status from user_stories where user_stories_id ='" + user_stories_id + "'"))
+
     if status != 'PBI':
-        db.engine.execute(
-            "delete from user_stories_sprint_table where user_stories_id= '" + user_stories_id + "'")
+        db.engine.execute("delete from user_stories_sprint_table where user_stories_id= '" + user_stories_id + "'")
 
     db.engine.execute("delete from user_stories_project_table WHERE user_stories_id= '" + user_stories_id + "'")
 
@@ -502,26 +504,23 @@ def delete_card(user_stories_id):
     flash('User Story successfully deleted!')
     return redirect(url_for('sprint_manage_endpoint', project_id=project_id))
 
+
 @app.route('/team/<project_id>')
 @login_required
 def team_endpoint(project_id):
-    members = db.engine.execute("select user.user_id from user "
-                                " join team_user_table on (user.user_id = team_user_table.user_id) "
+    members = db.engine.execute("select user.user_id from user"
+                                " join team_user_table on (user.user_id = team_user_table.user_id)"
                                 " join team on (team_user_table.team_id = team.team_id) "
-                                " join team_project_table on (team.team_id = team_project_table.team_id) "
-                                " join project on (team_project_table.project_id = project.project_id) "
+                                " join team_project_table on (team.team_id = team_project_table.team_id)"
+                                " join project on (team_project_table.project_id = project.project_id)"
                                 " where project.project_id = " + project_id)
 
-    team_ids = db.engine.execute("select team.team_id from team "
-                                 " join team_user_table on (team.team_id = team_user_table.team_id) "
-                                 " join user on (team_user_table.user_id = user.user_id) "
-                                 " join team_project_table on (team_project_table.team_id = team.team_id) "
-                                 " join project on (team_project_table.project_id = project.project_id) "
+    team_ids = db.engine.execute("select team.team_id from team"
+                                 " join team_user_table on (team.team_id = team_user_table.team_id)"
+                                 " join user on (team_user_table.user_id = user.user_id)"
+                                 " join team_project_table on (team_project_table.team_id = team.team_id)"
+                                 " join project on (team_project_table.project_id = project.project_id)"
                                  " where project.project_id = " + project_id)
-
-    # role_ids = db.engine.execute("select role.role_id from role "
-    #                             "join role_user_table on (role.role_id = role_user_table.role_id) "
-    #                             "join user on (role_user_table.user_id = user.user_id)")
 
     member_ids = []
     for id in members:
@@ -569,7 +568,6 @@ def add_member(project_id):
     return render_template('AddMember.html', title='Add Member', form=form)
 
 
-
 @app.route('/sprint_manage/<project_id>')
 @login_required
 def sprint_manage_endpoint(project_id):
@@ -595,29 +593,10 @@ def sprint_manage_endpoint(project_id):
                            get_acceptance_criteria=get_acceptance_criteria, project_id=project_id)
 
 
-def get_sprint_num(sprint_id):
-    sprint_num = db.engine.execute("select sprint_num from sprint where sprint_id = " + sprint_id)
-
-    sprint = []
-    for s in sprint_num:
-        sprint.append(s[0])
-
-    return sprint[0]
-
-
 @app.route('/sprint/<sprint_id>')
 @login_required
 def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
-    '''
-    if sprint_id is None:
-        project_id = db.engine.execute("select project.project_id from project join team_project_table on"
-                             " (project.project_id = team_project_table.project_id) join team on"
-                             " (team_project_table.team_id = team.team_id) join team_user_table on"
-                             " (team.team_id = team_user_table.team_id) where team_user_table.user_id = " + current_user.get_id())
 
-
-        return(redirect(url_for('create_sprint', project_id = project_id))
-    '''
     old_retro = Sprint.query.get(sprint_id)
     sprintretro = RetroForm(obj=old_retro)
     if sprintretro.validate_on_submit():
@@ -639,8 +618,8 @@ def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
     project_id = str(
         db.engine.execute("select project_id from project_sprint_table where sprint_id ='" + sprint_id + "'").scalar())
 
-    todo_us = db.engine.execute("select user_stories.user_stories_id from user_stories "
-                                " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id) "
+    todo_us = db.engine.execute("select user_stories.user_stories_id from user_stories"
+                                " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id)"
                                 " where user_stories_sprint_table.sprint_id = '" + str(sprint_id) +
                                 "' and user_stories.status = 'To do'")
 
@@ -648,8 +627,8 @@ def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
     for user_story in todo_us:
         todo.append(user_story[0])
 
-    inprogress_us = db.engine.execute("select user_stories.user_stories_id from user_stories "
-                                      " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id) "
+    inprogress_us = db.engine.execute("select user_stories.user_stories_id from user_stories"
+                                      " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id)"
                                       " where user_stories_sprint_table.sprint_id = '" + sprint_id +
                                       "' and user_stories.status = 'In Progress'")
 
@@ -657,8 +636,8 @@ def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
     for ip_us in inprogress_us:
         in_progress.append(ip_us[0])
 
-    done_us = db.engine.execute("select user_stories.user_stories_id from user_stories "
-                                " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id) "
+    done_us = db.engine.execute("select user_stories.user_stories_id from user_stories"
+                                " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id)"
                                 " where user_stories_sprint_table.sprint_id = '" + sprint_id +
                                 "' and user_stories.status = 'Done'")
 
@@ -666,7 +645,7 @@ def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
     for dn_us in done_us:
         done.append(dn_us[0])
 
-    pb = db.engine.execute("select user_stories.user_stories_id from user_stories "
+    pb = db.engine.execute("select user_stories.user_stories_id from user_stories"
                            " join user_stories_project_table on (user_stories_project_table.user_stories_id = user_stories.user_stories_id)"
                            " where user_stories_project_table.project_id ='" + project_id +
                            "' and user_stories.status = 'PBI'")
@@ -674,6 +653,7 @@ def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
     prod_back_ids = []
     for prod_back in pb:
         prod_back_ids.append(prod_back[0])
+
     return render_template('Sprint.html', title="Sprint Page", project_id=project_id, todo=todo, inprogress=in_progress,
                            done=done, prod_back_ids=prod_back_ids, get_title=get_title, get_difficulty=get_difficulty,
                            get_description=get_description, get_acceptance_criteria=get_acceptance_criteria,
@@ -695,6 +675,7 @@ def create_card(project_id):
         db.engine.execute("insert into user_stories_sprint_table (user_stories_id) values ('" + str(user_stories_id) + "')")
         flash('Congratulations, you made a User Story!')
         return redirect(url_for('sprint_manage_endpoint', project_id=project_id))
+
     return render_template('CreateUserStory.html', title='Create User Story', form=form, project_id=project_id)
 
 
@@ -712,14 +693,13 @@ def get_role_id(role_title):
 def assign_role(team_id, project_id, role_id, user_id):
     role = Role.query.filter_by(role_id=role_id).first()
 
-    # Rename title to role_title in db to eliminate conflict with title keyword in python?
     if role is None:
         flash('Role not found!')
 
     db.engine.execute("update team_user_table set role_id = " + role_id + " where team_id = " + team_id +
                       " and user_id = " + user_id)
     flash('Role assignment successful!')
-    # Make role.html to render the data onto page
+
     return redirect(url_for('team_endpoint', project_id=project_id))  # Title conflicts with title for html?
 
 
@@ -732,7 +712,6 @@ def remove_role(role_id, project_id, team_id, user_id):
     if role is None:
         flash('Role was not found!')
         return redirect(url_for('team_endpoint', project_id=project_id))
-    # how to delete an attribute from a table?
 
     db.engine.execute("update team_user_table set role_id = null where team_id = " + team_id +
                       " and user_id = "+user_id)

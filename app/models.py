@@ -1,7 +1,7 @@
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from sqlalchemy.orm import synonym, relationship, backref
+from sqlalchemy.orm import synonym
 
 team_project_table = db.Table('team_project_table',
                               db.Column('project_id', db.Integer, db.ForeignKey('project.project_id')),
