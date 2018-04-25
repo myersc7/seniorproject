@@ -38,18 +38,30 @@
             <p>
                 {{ form.title.label }}<br>
                 {{ form.title(size=45) }}<br>
+                {% for error in form.title.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             <p>
                 {{ form.Difficulty.label }}<br>
                 {{ form.Difficulty(size=45) }}<br>
+                {% for error in form.Difficulty.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             <p>
                 {{ form.Description.label }}<br>
                 {{ form.Description(size=45) }}<br>
+                {% for error in form.Description.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             <p>
                 {{ form.Acceptance_criteria.label }}<br>
                 {{ form.Acceptance_criteria(cols="50", rows="10") }}<br>
+                {% for error in form.Acceptance_criteria.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             <p>{{ form.submit() }}</p>
         </form>
