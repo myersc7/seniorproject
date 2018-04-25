@@ -23,10 +23,16 @@
             <p align="center">
                 {{ form.proj_name.label }}<br>
                 {{ form.proj_name(size=45) }}<br>
+                {% for error in form.proj_name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             <p align="center">
                 {{ form.team_name.label }}<br>
                 {{ form.team_name(size=45) }}<br>
+                {% for error in form.team_name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             <p align="center">{{ form.submit() }}</p>
         </form>
