@@ -28,10 +28,16 @@
         <p align="center">
             {{ form.username.label }}<br>
             {{ form.username(size=45) }}<br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
         </p>
         <p align="center">
             {{ form.email.label }}<br>
             {{ form.email(size=45) }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
         </p>
         <p align="center">{{ form.submit() }}</p>
     </form>

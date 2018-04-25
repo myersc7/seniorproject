@@ -176,6 +176,7 @@ def get_email(user_id):
 
 
 @app.route('/PBI/<user_stories_id>', methods=['GET', 'POST'])
+@login_required
 def PBI(user_stories_id: int):
     project_id = str(db.engine.execute(
         "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
@@ -200,6 +201,7 @@ def PBI(user_stories_id: int):
 
 
 @app.route('/To_do/<user_stories_id>', methods=['GET', 'POST'])
+@login_required
 def To_do(user_stories_id: int):
 
     project_id = str(db.engine.execute(
@@ -225,6 +227,7 @@ def To_do(user_stories_id: int):
 
 
 @app.route('/In_p/<user_stories_id>', methods=['GET', 'POST'])
+@login_required
 def In_p(user_stories_id: int):
     project_id = str(db.engine.execute(
         "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
@@ -248,6 +251,7 @@ def In_p(user_stories_id: int):
 
 
 @app.route('/Done/<user_stories_id>', methods=['GET', 'POST'])
+@login_required
 def Done(user_stories_id: int):
     project_id = str(db.engine.execute(
         "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
@@ -271,6 +275,7 @@ def Done(user_stories_id: int):
 
 
 @app.route('/Card/<user_stories_id>', methods=['GET', 'POST'])
+@login_required
 def card(user_stories_id):
     card = User_Stories.query.get(user_stories_id)
     form = User_StoriesForm(obj=card)
@@ -476,6 +481,7 @@ def create_sprint(project_id):
 
 
 @app.route('/delete_card/<user_stories_id>')  # Pop up with warning and confirmation
+@login_required
 def delete_card(user_stories_id):
     project_id = str(db.engine.execute("select project_id from user_stories_project_table "
                       " where user_stories_id = '" + user_stories_id + "'").scalar())
