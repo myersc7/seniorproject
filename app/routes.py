@@ -6,7 +6,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Project, Team, Sprint, User_Stories, Role
 from werkzeug.urls import url_parse
 
-
+# Sprint helper functions
 def get_review(sprint_id):
     review = db.engine.execute("select Review from sprint where sprint_id = " + sprint_id)
     name = []
@@ -38,48 +38,6 @@ def get_sprint_id(user_stories_id):
         return 'None'
 
 
-def get_sprint_num(sprint_id):
-    sprint_num = db.engine.execute("select sprint_num from sprint where sprint_id = " + sprint_id)
-
-    sprint = []
-    for s in sprint_num:
-        sprint.append(s[0])
-
-    return sprint[0]
-
-
-def get_role(user_id, team_id):
-    role_title = db.engine.execute('select role.title from role '
-                                   'join team_user_table on (team_user_table.role_id = role.role_id) '
-                                   'where team_user_table.user_id = ' + user_id + " and team_user_table.team_id =" + team_id)
-
-    role = []
-    for r in role_title:
-        role.append(r[0])
-    try:
-        return role[0]
-    except IndexError:
-        return 'None'
-
-
-def get_team_name(team_id):
-    team_name = db.engine.execute("select team_name from team where team_id = " + team_id)
-    name = []
-    for n in team_name:
-        name.append(n[0])
-
-    return name[0]
-
-
-def get_dod(project_id):
-    dod = db.engine.execute("select Dod from project where project_id = " + project_id)
-    name = []
-    for n in dod:
-        name.append(n[0])
-
-    return str(name[0])
-
-
 def currentSprintNum(project_id: int):
     curr = db.engine.execute(
         "Select sprint.sprint_num from sprint "
@@ -98,28 +56,29 @@ def currentSprintNum(project_id: int):
 
 def currentSprint(project_id: int):
     curr = db.engine.execute(
-        "Select sprint.sprint_id from sprint "
-        "join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
-        "join project on (project_sprint_table.project_id = project.project_id)"
-        "where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
+        "Select sprint.sprint_id from sprint"
+        " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+        " join project on (project_sprint_table.project_id = project.project_id)"
+        " where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
 
     currSprint = []
 
     for sprint in curr:
         currSprint.append(sprint[0])
     if not currSprint:
-        return ('/create_sprint/' + project_id)
+        return '/create_sprint/' + project_id
     else:
-        return ('/sprint/' + str(currSprint[0]))
+        return '/sprint/' + str(currSprint[0])
 
 
-def get_proj_name(project_id: int):
-    proj_name = db.engine.execute("select project.proj_name from project where project.project_id = " + project_id)
+def get_sprint_num(sprint_id):
+    sprint_num = db.engine.execute("select sprint_num from sprint where sprint_id = " + sprint_id)
 
-    pname = []
-    for name in proj_name:
-        pname.append(name[0])
-    return str(pname[0])
+    sprint = []
+    for s in sprint_num:
+        sprint.append(s[0])
+
+    return sprint[0]
 
 
 def get_title(id: int):
@@ -159,6 +118,71 @@ def get_acceptance_criteria(id: int):
     return str(acceptance[0])
 
 
+# Role helper functions
+def get_role(user_id, team_id):
+    role_title = db.engine.execute('select role.title from role'
+                                   ' join team_user_table on (team_user_table.role_id = role.role_id)'
+                                   ' where team_user_table.user_id = ' + user_id + " and team_user_table.team_id =" + team_id)
+
+    role = []
+    for r in role_title:
+        role.append(r[0])
+    try:
+        return role[0]
+    except IndexError:
+        return 'None'
+
+
+def get_role_id(role_title):
+    role = Role.query.filter_by(title=role_title).first()
+
+    try:
+        return role.role_id
+    except IndexError:
+        return 'None'
+
+
+# Team helper function
+def get_team_name(team_id):
+    team_name = db.engine.execute("select team_name from team where team_id = " + team_id)
+    name = []
+    for n in team_name:
+        name.append(n[0])
+
+    return name[0]
+
+
+# Project helper functions
+def get_dod(project_id):
+    dod = db.engine.execute("select Dod from project where project_id = " + project_id)
+    name = []
+    for n in dod:
+        name.append(n[0])
+
+    return str(name[0])
+
+
+def get_proj_name(project_id: int):
+    proj_name = db.engine.execute("select project.proj_name from project where project.project_id = " + project_id)
+
+    pname = []
+    for name in proj_name:
+        pname.append(name[0])
+    return str(pname[0])
+
+
+def edit_githublink(project_id, github_link):
+    proj = Project.query.filter_by(project_id=project_id).first()
+
+    if not proj:
+        flash('Project not found!')
+
+    db.engine.execute("update project set github_link = " + github_link + " where project_id = " + project_id)
+
+    return redirect(url_for('project_endpoint', project_id=project_id))
+
+
+# User helper functions
 def get_username(user_id):
     username = db.engine.execute("select username from user where user.user_id = " + user_id)
 
@@ -177,6 +201,173 @@ def get_email(user_id):
         user_email.append(e[0])
 
     return user_email[0]
+
+
+# Routes/Endpoints
+@app.route('/')
+@app.route('/index', methods=['GET', 'POST'])
+@login_required
+def index():
+    proj_ids = db.engine.execute("select project.project_id from project"
+                                 " join team_project_table on  (project.project_id = team_project_table.project_id)"
+                                 " join team on (team_project_table.team_id = team.team_id)"
+                                 " join team_user_table on (team.team_id = team_user_table.team_id) where team_user_table.user_id = " + current_user.get_id())
+
+    project_ids = []
+    for pid in proj_ids:
+        project_ids.append(pid[0])
+    return render_template('index.html', title='Home', project_ids=project_ids, get_proj_name=get_proj_name)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
+    return render_template('login.html', title='Sign In', form=form)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        # only accept alphanumeric characters for username
+        if form.username.data.isalnum() is True:
+
+            user = User(username=form.username.data, email=form.email.data)
+
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('Congratulations, you are now a registered user!')
+            return redirect(url_for('login'))
+        else:
+            flash('Please use alphanumeric characters for username.')
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/project/<project_id>', methods=['GET', 'POST'])
+@login_required
+def project_endpoint(project_id):
+    old_dod = Project.query.get(project_id)
+    form = DodForm(obj = old_dod)
+    if form.validate():
+        form.populate_obj(old_dod)
+        Dod = str(form.Dod.data)
+        db.engine.execute("UPDATE project SET Dod= \"" + Dod + "\" WHERE project_id= '" + project_id +"'")
+        flash("Definition of done added")
+        return redirect(url_for('project_endpoint', project_id=project_id))
+    sprints_num = db.engine.execute("select sprint_num from sprint"
+                                    " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+                                    " join project on (project_sprint_table.project_id = project.project_id)"
+                                    " where project.project_id = '" + project_id + "'")
+
+    sprints_num2 = db.engine.execute("select sprint_num from sprint"
+                                     " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+                                     " join project on (project_sprint_table.project_id = project.project_id)"
+                                     " where project.project_id = '" + project_id + "'")
+
+    big = db.engine.execute("select SUM(difficulty) from user_stories"
+                            " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id)"
+                            " join sprint on (user_stories_sprint_table.sprint_id = sprint.sprint_id)"
+                            " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+                            " join project on (project_sprint_table.project_id = project.project_id)"
+                            " where project.project_id = '" + project_id + "'").scalar()
+
+    completeDiff = []
+    totalDiff = []
+    sprints = []
+
+    for num in sprints_num:
+        sprints.append(num[0])
+
+    total = 0
+    for num in sprints:
+
+        little = db.engine.execute("select SUM(difficulty) from user_stories"
+                                   " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id)"
+                                   " join sprint on (user_stories_sprint_table.sprint_id = sprint.sprint_id)"
+                                   " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+                                   " join project on (project_sprint_table.project_id = project.project_id)"
+                                   " where project.project_id = '" + project_id + "' and sprint.sprint_num = '"
+                                   + str(num) + "' and status = 'Done'").scalar()
+        try:
+            total = total + int(little)
+        except TypeError:
+            total = total
+        completeDiff.append(total)
+
+    for num in sprints_num2:
+        try:
+            totalDiff.append(int(big))
+        except TypeError:
+            totalDiff.append(0)
+
+    return render_template('project.html', title="Project page", get_proj_name=get_proj_name,
+                           currentSprint=currentSprint, project_id=project_id,
+                           sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff, form=form, get_dod=get_dod,
+                           edit_githublink=edit_githublink)
+
+
+@app.route('/create_project', methods=['GET', 'POST'])
+@login_required
+def create_project():
+    teams = db.engine.execute('select team_name from team'
+                              ' join team_user_table on (team.team_id = team_user_table.team_id)'
+                              ' where team_user_table.user_id = ' + current_user.get_id())
+    team_names = []
+    for name in teams:
+        team_names.append(name[0])
+
+    form = ProjectForm()
+    if form.validate_on_submit():
+        project = Project(proj_name=form.proj_name.data, total_diff=0)
+        team = Team(team_name=form.team_name.data)
+
+        db.session.add(project)
+        db.session.add(team)
+        team.projteams.append(project)
+        team.userteams.append(current_user)
+        db.session.commit()
+        flash('Congratulations, you made a project!')
+        return redirect(url_for('index'))
+
+    return render_template('CreateProjectNew.html', title='Create Project', form=form, team_names=team_names)
+
+
+@app.route('/delete_project/<project_id>')
+@login_required
+def delete_project(project_id):
+    if current_user.is_authenticated:
+        project = Project.query.filter_by(project_id=project_id).first()
+
+        if not project:
+            flash('Project not found!')
+
+        db.session.delete(project)
+        db.session.commit()
+        flash('Project successfully deleted!')
+        return redirect(url_for('index'))
+    # might need additional return here?
 
 
 @app.route('/PBI/<user_stories_id>', methods=['GET', 'POST'])
@@ -294,168 +485,6 @@ def card(user_stories_id):
     return render_template('Card.html', title="card", form = form, user_stories_id=user_stories_id, delete_card=delete_card)
 
 
-@app.route('/')
-@app.route('/index', methods=['GET', 'POST'])
-@login_required
-def index():
-    proj_ids = db.engine.execute("select project.project_id from project"
-                                 " join team_project_table on  (project.project_id = team_project_table.project_id)"
-                                 " join team on (team_project_table.team_id = team.team_id)"
-                                 " join team_user_table on (team.team_id = team_user_table.team_id) where team_user_table.user_id = " + current_user.get_id())
-
-    project_ids = []
-    for pid in proj_ids:
-        project_ids.append(pid[0])
-    return render_template('index.html', title='Home', project_ids=project_ids, get_proj_name=get_proj_name)
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index')
-        return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
-
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        # only accept alphanumeric characters for username
-        if form.username.data.isalnum() is True:
-
-            user = User(username=form.username.data, email=form.email.data)
-
-            user.set_password(form.password.data)
-            db.session.add(user)
-            db.session.commit()
-            flash('Congratulations, you are now a registered user!')
-            return redirect(url_for('login'))
-        else:
-            flash('Please use alphanumeric characters for username.')
-    return render_template('register.html', title='Register', form=form)
-
-
-@app.route('/project/<project_id>', methods=['GET', 'POST'])
-@login_required
-def project_endpoint(project_id):
-    old_dod = Project.query.get(project_id)
-    form = DodForm(obj = old_dod)
-    if form.validate():
-        form.populate_obj(old_dod)
-        Dod = str(form.Dod.data)
-        db.engine.execute("UPDATE project SET Dod= \"" + Dod + "\" WHERE project_id= '" + project_id +"'")
-        flash("Definition of done added")
-        return redirect(url_for('project_endpoint', project_id=project_id))
-    sprints_num = db.engine.execute("select sprint_num from sprint "
-                                    "join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id) "
-                                    "join project on (project_sprint_table.project_id = project.project_id) "
-                                    " where project.project_id = '" + project_id + "'")
-    sprints_num2 = db.engine.execute("select sprint_num from sprint join project_sprint_table on "
-                                     " (sprint.sprint_id = project_sprint_table.sprint_id) join project on "
-                                     " (project_sprint_table.project_id = project.project_id) "
-                                     " where project.project_id = '" + project_id + "'")
-    big = db.engine.execute("select SUM(difficulty) from user_stories "
-                            " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id) "
-                            " join sprint on (user_stories_sprint_table.sprint_id = sprint.sprint_id) "
-                            " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id) "
-                            " join project on (project_sprint_table.project_id = project.project_id) "
-                            " where project.project_id = '" + project_id + "'").scalar()
-
-    completeDiff = []
-    totalDiff = []
-    sprints = []
-
-    for num in sprints_num:
-        sprints.append(num[0])
-
-    total = 0
-    for num in sprints:
-
-        little = db.engine.execute("select SUM(difficulty) from user_stories "
-                                   " join user_stories_sprint_table on (user_stories.user_stories_id = user_stories_sprint_table.user_stories_id) "
-                                   " join sprint on (user_stories_sprint_table.sprint_id = sprint.sprint_id) "
-                                   " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id) "
-                                   " join project on (project_sprint_table.project_id = project.project_id) "
-                                   " where project.project_id = '" + project_id + "' and sprint.sprint_num = '"
-                                   + str(num) + "' and status = 'Done'").scalar()
-        try:
-            total = total + int(little)
-        except TypeError:
-            total = total
-        completeDiff.append(total)
-
-    for num in sprints_num2:
-        try:
-            totalDiff.append(int(big))
-        except TypeError:
-            totalDiff.append(0)
-
-    return render_template('project.html', title="Project page", get_proj_name=get_proj_name,
-                           currentSprint=currentSprint, project_id=project_id,
-                           sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff, form=form, get_dod=get_dod,
-                           edit_githublink=edit_githublink)
-
-
-@app.route('/create_project', methods=['GET', 'POST'])
-@login_required
-def create_project():
-    teams = db.engine.execute('select team_name from team '
-                              ' join team_user_table on (team.team_id = team_user_table.team_id)'
-                              ' where team_user_table.user_id = ' + current_user.get_id())
-    team_names = []
-    for name in teams:
-        team_names.append(name[0])
-
-    form = ProjectForm()
-    if form.validate_on_submit():
-        project = Project(proj_name=form.proj_name.data, total_diff=0)
-        team = Team(team_name=form.team_name.data)
-
-        db.session.add(project)
-        db.session.add(team)
-        team.projteams.append(project)
-        team.userteams.append(current_user)
-        db.session.commit()
-        flash('Congratulations, you made a project!')
-        return redirect(url_for('index'))
-    return render_template('CreateProjectNew.html', title='Create Project', form=form, team_names=team_names)
-
-
-@app.route('/delete_project/<project_id>')
-@login_required
-def delete_project(project_id):
-    if current_user.is_authenticated:
-        project = Project.query.filter_by(project_id=project_id).first()
-
-        if not project:
-            flash('Project not found!')
-
-        db.session.delete(project)
-        db.session.commit()
-        flash('Project successfully deleted!')
-        return redirect(url_for('index'))
-
-
 @app.route('/create_sprint/<project_id>', methods=['GET', 'POST'])
 @login_required
 def create_sprint(project_id):
@@ -487,6 +516,7 @@ def create_sprint(project_id):
 def delete_card(user_stories_id):
     project_id = str(db.engine.execute("select project_id from user_stories_project_table"
                                        " where user_stories_id = '" + user_stories_id + "'").scalar())
+
     status = str(db.engine.execute("select status from user_stories where user_stories_id ='" + user_stories_id + "'"))
 
     if status != 'PBI':
@@ -534,39 +564,6 @@ def team_endpoint(project_id):
                            get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role,
                            project_id=project_id, get_role_id=get_role_id)
   
-
-@app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
-@login_required
-def add_member(project_id):
-    form = AddMemberForm()
-    t_id = db.engine.execute("select team_id from team_project_table where project_id = "+project_id)
-    team_id = []
-    for t in t_id:
-        team_id.append(str(t[0]))
-
-    if form.validate_on_submit():
-        username = form.username.data
-        email = form.email.data
-        u_id = db.engine.execute("select user_id from user where username = '"+username+"' and email = '"+email+"'")
-        user_id = []
-        for u in u_id:
-            user_id.append(str(u[0]))
-        if not user_id:
-            flash('User not found!')
-        else:
-            u_name = db.engine.execute("select team_user_table_id from team_user_table where team_id = "+team_id[0]+" and user_id = "+user_id[0])
-            usernames = []
-            for name in u_name:
-                usernames.append(name[0])
-            if not usernames:
-                db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
-                flash('Congratulations, you added a member!')
-                return redirect('/team/' + project_id)
-            else:
-                flash(username+' is already a member of the team')
-
-    return render_template('AddMember.html', title='Add Member', form=form)
-
 
 @app.route('/sprint_manage/<project_id>')
 @login_required
@@ -679,15 +676,6 @@ def create_card(project_id):
     return render_template('CreateUserStory.html', title='Create User Story', form=form, project_id=project_id)
 
 
-def get_role_id(role_title):
-    role = Role.query.filter_by(title=role_title).first()
-
-    try:
-        return role.role_id
-    except IndexError:
-        return 'None'
-
-
 @app.route('/assign_role/<team_id>/<project_id>/<user_id>/<role_id>', methods=['GET', 'POST'])
 @login_required
 def assign_role(team_id, project_id, role_id, user_id):
@@ -719,13 +707,34 @@ def remove_role(role_id, project_id, team_id, user_id):
     return redirect(url_for('team_endpoint', project_id=project_id))
 
 
-def edit_githublink(project_id, github_link):
-    proj = Project.query.filter_by(project_id=project_id).first()
+@app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
+@login_required
+def add_member(project_id):
+    form = AddMemberForm()
+    t_id = db.engine.execute("select team_id from team_project_table where project_id = "+project_id)
+    team_id = []
+    for t in t_id:
+        team_id.append(str(t[0]))
 
-    if not proj:
-        flash('Project not found!')
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        u_id = db.engine.execute("select user_id from user where username = '"+username+"' and email = '"+email+"'")
+        user_id = []
+        for u in u_id:
+            user_id.append(str(u[0]))
+        if not user_id:
+            flash('User not found!')
+        else:
+            u_name = db.engine.execute("select team_user_table_id from team_user_table where team_id = "+team_id[0]+" and user_id = "+user_id[0])
+            usernames = []
+            for name in u_name:
+                usernames.append(name[0])
+            if not usernames:
+                db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
+                flash('Congratulations, you added a member!')
+                return redirect('/team/' + project_id)
+            else:
+                flash(username+' is already a member of the team')
 
-    db.engine.execute("update project set github_link = " + github_link + " where project_id = " + project_id)
-
-    return redirect(url_for('project_endpoint', project_id=project_id))
-
+    return render_template('AddMember.html', title='Add Member', form=form)
