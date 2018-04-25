@@ -28,7 +28,7 @@
         var card = 1;
         function add_card() {
             card++;
-            var objTo = document.getElementById('CardList')
+            var objTo = document.getElementById('CardList');
             var divtest = document.createElement("div");
             divtest.innerHTML = '<div class="card">\n' +
             '            <div class="card-body">\n' +
@@ -46,7 +46,7 @@
         var sprint = 1;
         function add_sprint() {
             sprint++;
-            var objTo = document.getElementById('SprintList')
+            var objTo = document.getElementById('SprintList');
             var divtest = document.createElement("div");
             divtest.innerHTML = '<a href="#" class="button sprint-button hvr-shrink">Sprint {{p}}</a>';
             objTo.appendChild(divtest)
