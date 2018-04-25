@@ -1,50 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-    <a class="navbar-brand" href="/index">Agility</a>
-    <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-            <a class="nav-link" href="/project/{{ project_id }}">Project Page</a>
-        </li>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+        <a class="navbar-brand" href="/index">Agility</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/project/{{ project_id }}">Project Page</a>
+            </li>
 
-        <li class="nav-item">
-            <a class="nav-link" href="/sprint_manage/{{ project_id }}">Sprint Management</a>
-        </li>
-    </ul>
-    <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/sprint_manage/{{ project_id }}">Sprint Management</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
 
-        <li class="nav-item">
-            <a class="nav-link" href="/logout">Log Out</a>
-        </li>
-    </ul>
-</nav>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+        </ul>
+    </nav>
 
-<body>
+    <body>
 
-<h1>{{ get_team_name(t_id[0]|string) }}</h1>
-<div class ="center"><p>Project Members</p></div>
+    <h1>{{ get_team_name(t_id[0]|string) }}</h1>
+    <div class ="center"><p>Project Members</p></div>
 
     {% for p in member_ids %} <!-- p = user_id -->
-    <hr>
-	<div class ="container member-info">
-    		<p>Name: {{ get_username(p|string) }}</p>
-    		<p>Email: {{ get_email(p|string) }}</p>
+        <hr>
+        <div class ="container member-info">
+            <p>Name: {{ get_username(p|string) }}</p>
+            <p>Email: {{ get_email(p|string) }}</p>
             <!-- add check if user's role is null show drop down list if not just get role and display -->
 
             {% if get_role(p|string, t_id[0]|string) == 'None' %}
-            <div class="dropdown">
-                <button class="button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="dropdown">
+                    Role: <button class="button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Place in...
                 </button>
-                <p>Role:
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Scrum Master") }}">Scrum Master</a>
                         <a class="dropdown-item" href="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Product Owner") }}">Product Owner</a>
                         <a class="dropdown-item" href="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Developer") }}">Developer</a>
                     </div>
-                {#<select name="myList" id="ddl_rolelist">
+                    {#<select name="myList" id="ddl_rolelist">
                         <!-- /assign_role/teamid/projid/userid/roleid -->
                         <option id="Scrum Master" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Scrum Master") }}">Scrum Master</option>
                         <option id="Product Owner" value="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Product Owner") }}">Product Owner</option>
@@ -52,23 +51,23 @@
                     </select>
                     <input type="button" onclick="goto_link(document.getElementById('ddl_rolelist').value)" value="Assign Role">
                     </p>#}
-            </div>
+                </div>
             {% else %}
                 <!-- /remove_role/roleid/projid/teamid/userid -->
                 <p>Role: {{ get_role(p|string, t_id[0]|string) }} <a href="/remove_role/{{ get_role_id(get_role(p|string, t_id[0]|string)) }}/{{ project_id }}/{{ t_id[0]|string }}/{{ p }}" class="button" onclick="return confirm('Are you sure?')">Remove Role</a></p>
 
             {% endif %}
-	</div>
+        </div>
     {% endfor %}
     <div class="center">
-    <a href='/addmember/{{ project_id }}' class="button user-page-button hvr-shrink">Add Member +<span class="glyphicon glyphicon-plus"></span></a>
+        <a href='/addmember/{{ project_id }}' class="button user-page-button hvr-shrink">Add Member +<span class="glyphicon glyphicon-plus"></span></a>
     </div>
 
-<script>
-    function goto_link(href){
-        window.location.replace(href);
-    }
-</script>
+    <script>
+        function goto_link(href){
+            window.location.replace(href);
+        }
+    </script>
 
-</body>
+    </body>
 {% endblock %}
