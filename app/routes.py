@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, ProjectForm, SprintForm, User_StoriesForm, DodForm, AddMemberForm
-from app.forms import RetroForm, ReviewForm
+from app.forms import RetroForm, ReviewForm, GitHubForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Project, Team, Sprint, User_Stories, Role
 from werkzeug.urls import url_parse
@@ -171,17 +171,6 @@ def get_proj_name(project_id: int):
     return str(pname[0])
 
 
-def edit_githublink(project_id, github_link):
-    proj = Project.query.filter_by(project_id=project_id).first()
-
-    if not proj:
-        flash('Project not found!')
-
-    db.engine.execute("update project set github_link = " + github_link + " where project_id = " + project_id)
-
-    return redirect(url_for('project_endpoint', project_id=project_id))
-
-
 # User helper functions
 def get_username(user_id):
     username = db.engine.execute("select username from user where user.user_id = " + user_id)
@@ -269,6 +258,16 @@ def register():
 @login_required
 def project_endpoint(project_id):
     old_dod = Project.query.get(project_id)
+    proj = Project.query.filter_by(project_id=project_id).first()
+    if not proj:
+        flash('Project not found!')
+
+    else:
+        if proj.github_link is not None:
+            github_link = proj.github_link
+        else:
+            github_link = 'https://github.com'
+
     form = DodForm(obj = old_dod)
     if form.validate():
         form.populate_obj(old_dod)
@@ -325,7 +324,7 @@ def project_endpoint(project_id):
     return render_template('project.html', title="Project page", get_proj_name=get_proj_name,
                            currentSprint=currentSprint, project_id=project_id,
                            sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff, form=form, get_dod=get_dod,
-                           edit_githublink=edit_githublink)
+                           githublink=github_link)
 
 
 @app.route('/create_project', methods=['GET', 'POST'])

@@ -84,5 +84,9 @@ class RegistrationForm(FlaskForm):
 class SprintForm(FlaskForm):
     start_date = DateField('Start Date (MM-DD-YYYY)', format='%m-%d-%Y', validators=[DataRequired()])
     end_date = DateField('End Date (MM-DD-YYYY)', format='%m-%d-%Y', validators=[DataRequired()])
-    # sprint_num = IntegerField('Sprint Number', validators=[DataRequired()])   # don't think we need this
     submit = SubmitField('Submit')
+
+
+class GitHubForm(FlaskForm):
+    github_link = StringField('Edit GitHub link', validators=[DataRequired()])
+    submit = SubmitField('Update GitHub link')
