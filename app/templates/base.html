@@ -63,9 +63,19 @@
 {% with messages = get_flashed_messages() %}
 {% if messages %}
     {% for message in messages %}
-	<div align="center" class="alert alert-info">
+        {% if 'success' in message or 'Congratulations' in message %}
+        <div align="center" class="alert alert-success">
         <strong>{{ message }}</strong>
         </div>
+
+        {% elif 'not' in message %}
+        <div align="center" class="alert alert-danger">
+        <strong>{{ message }}</strong>
+        </div>
+        {% else %}
+        <div align="center" class="alert alert-warning">
+        <strong>{{ message }}</strong>
+        {% endif %}
     {% endfor %}
 {% endif %}
 {% endwith %}
