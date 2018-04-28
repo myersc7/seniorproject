@@ -36,7 +36,7 @@
             {% if get_role(p|string, t_id[0]|string) == 'None' %}
                 <div class="dropdown">
                     Role: <button class="button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Place in...
+                    Assign Role
                 </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/assign_role/{{ t_id[0]|string }}/{{ project_id }}/{{ p|string }}/{{ get_role_id("Scrum Master") }}">Scrum Master</a>
