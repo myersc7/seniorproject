@@ -133,7 +133,6 @@ class User_Stories(db.Model):
     Status = db.Column(db.String(45))
     title = db.Column(db.String(45))
     Description = db.Column(db.String(400))
-    Github_link = db.Column(db.String(100))
     Difficulty = db.Column(db.Integer)
     id = synonym('user_stories_id')
 
