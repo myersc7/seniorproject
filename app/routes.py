@@ -6,6 +6,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Project, Team, Sprint, User_Stories, Role
 from werkzeug.urls import url_parse
 
+
 # Sprint helper functions
 def get_review(sprint_id):
     review = db.engine.execute("select Review from sprint where sprint_id = " + sprint_id)
@@ -171,6 +172,19 @@ def get_proj_name(project_id: int):
     return str(pname[0])
 
 
+def get_githublink(project_id):
+    proj = Project.query.filter_by(project_id=project_id).first()
+
+    if not proj:
+        flash('Project not found!')
+
+    else:
+        if proj.github_link is not None:
+            return proj.github_link
+        else:
+            return 'https://github.com'
+
+
 # User helper functions
 def get_username(user_id):
     username = db.engine.execute("select username from user where user.user_id = " + user_id)
@@ -262,19 +276,24 @@ def project_endpoint(project_id):
     if not proj:
         flash('Project not found!')
 
-    else:
-        if proj.github_link is not None:
-            github_link = proj.github_link
-        else:
-            github_link = 'https://github.com'
 
-    form = DodForm(obj = old_dod)
+    elif proj.github_link is not None:
+        github_link = proj.github_link
+
+    else:
+        github_link = 'https://github.com'
+
+    form = DodForm(obj=old_dod)
     if form.validate():
         form.populate_obj(old_dod)
         Dod = str(form.Dod.data)
-        db.engine.execute("UPDATE project SET Dod= \"" + Dod + "\" WHERE project_id= '" + project_id +"'")
-        flash("Definition of done added")
-        return redirect(url_for('project_endpoint', project_id=project_id))
+        if len(Dod) <= 200:
+            db.engine.execute("UPDATE project SET Dod= \"" + Dod + "\" WHERE project_id= '" + project_id + "'")
+            flash("Definition of done added")
+            return redirect(url_for('project_endpoint', project_id=project_id))
+
+        else:
+            flash('Exceeded char limit of 200.')
     sprints_num = db.engine.execute("select sprint_num from sprint"
                                     " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
                                     " join project on (project_sprint_table.project_id = project.project_id)"
@@ -324,7 +343,7 @@ def project_endpoint(project_id):
     return render_template('project.html', title="Project page", get_proj_name=get_proj_name,
                            currentSprint=currentSprint, project_id=project_id,
                            sprints=sprints, totalDiff=totalDiff, completeDiff=completeDiff, form=form, get_dod=get_dod,
-                           githublink=github_link)
+                           githublink=github_link, get_githublink=get_githublink)
 
 
 @app.route('/create_project', methods=['GET', 'POST'])
@@ -389,7 +408,8 @@ def PBI(user_stories_id: int):
     if str(sprint_id) == 'None':
         sprint_id = str(sprint[0])
     db.engine.execute("UPDATE user_stories SET Status='PBI' WHERE user_stories_id= '" + user_stories_id + "'")
-    db.engine.execute("UPDATE user_stories_sprint_table SET sprint_id = NULL WHERE user_stories_id= '" + str(user_stories_id) + "'")
+    db.engine.execute(
+        "UPDATE user_stories_sprint_table SET sprint_id = NULL WHERE user_stories_id= '" + str(user_stories_id) + "'")
 
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
@@ -397,7 +417,6 @@ def PBI(user_stories_id: int):
 @app.route('/To_do/<user_stories_id>', methods=['GET', 'POST'])
 @login_required
 def To_do(user_stories_id: int):
-
     project_id = str(db.engine.execute(
         "Select project_id from user_stories_project_table"
         " where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
@@ -416,7 +435,8 @@ def To_do(user_stories_id: int):
         sprint_id = str(sprint[0])
     db.engine.execute("UPDATE user_stories SET Status='To do' WHERE user_stories_id= '" + user_stories_id + "'")
     db.engine.execute(
-        "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(user_stories_id) + "'")
+        "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(
+            user_stories_id) + "'")
 
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
@@ -439,7 +459,8 @@ def In_p(user_stories_id: int):
         sprint_id = str(sprint[0])
     db.engine.execute("UPDATE user_stories SET Status='In Progress' WHERE user_stories_id= '" + user_stories_id + "'")
     db.engine.execute(
-        "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(user_stories_id) + "'")
+        "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(
+            user_stories_id) + "'")
 
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
@@ -462,15 +483,20 @@ def Done(user_stories_id: int):
         sprint_id = str(sprint[0])
     db.engine.execute("UPDATE user_stories SET Status='Done' WHERE user_stories_id= '" + user_stories_id + "'")
     db.engine.execute(
-        "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(user_stories_id) + "'")
+        "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(
+            user_stories_id) + "'")
 
-    return redirect(url_for('sprint_endpoint', sprint_id= sprint_id))
+    return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
 
 @app.route('/Card/<user_stories_id>', methods=['GET', 'POST'])
 @login_required
 def card(user_stories_id):
     card = User_Stories.query.get(user_stories_id)
+    project_id = str(
+        db.engine.execute(
+            "select project_id from user_stories_project_table where user_stories_id ='" + user_stories_id + "'").scalar())
+
     form = User_StoriesForm(obj=card)
     if form.validate_on_submit():
         form.populate_obj(card)
@@ -478,10 +504,12 @@ def card(user_stories_id):
         difficulty = str(form.Difficulty.data)
         description = str(form.Description.data)
         acc_crit = str(form.Acceptance_criteria.data)
-        db.engine.execute("UPDATE user_stories SET title= \"" + title + "\" , Difficulty = \"" + difficulty + "\" , Description = \""
-        + description + "\" , Acceptance_criteria = \"" + acc_crit + "\" WHERE user_stories_id= '" + user_stories_id + "'")
+        db.engine.execute(
+            "UPDATE user_stories SET title= \"" + title + "\" , Difficulty = \"" + difficulty + "\" , Description = \""
+            + description + "\" , Acceptance_criteria = \"" + acc_crit + "\" WHERE user_stories_id= '" + user_stories_id + "'")
         return redirect(url_for("card", user_stories_id=user_stories_id))
-    return render_template('Card.html', title="card", form = form, user_stories_id=user_stories_id, delete_card=delete_card)
+    return render_template('Card.html', title="card", form=form, user_stories_id=user_stories_id,
+                           delete_card=delete_card, project_id=project_id)
 
 
 @app.route('/create_sprint/<project_id>', methods=['GET', 'POST'])
@@ -493,12 +521,14 @@ def create_sprint(project_id):
         sprint = Sprint(start_date=form.start_date.data, end_date=form.end_date.data, sprint_num=next_sprint)
         project = Project.query.filter_by(project_id=project_id).first()
         db.session.add(sprint)
-        sprint.projects.append(project)
+        # sprint.projects.append(project)
+        project.sprints.append(sprint)
         db.session.commit()
         next_sprint_id = str(db.engine.execute("select sprint.sprint_id from sprint"
                                                " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
                                                " where sprint.sprint_num = '" + str(next_sprint) +
-                                               "' and project_sprint_table.project_id ='" + str(project_id) + "'").scalar())
+                                               "' and project_sprint_table.project_id ='" + str(
+            project_id) + "'").scalar())
         flash('Congratulations, you made a sprint!')
         return redirect(url_for('sprint_endpoint', sprint_id=str(next_sprint_id)))
 
@@ -507,7 +537,29 @@ def create_sprint(project_id):
                                            " where sprint.sprint_num = '" + str(next_sprint) +
                                            "' and project_sprint_table.project_id ='" + str(project_id) + "'"))
 
-    return render_template('CreateSprint.html', title='Create Sprint', form=form, project_id=project_id, sprint_id=next_sprint_id)
+    return render_template('CreateSprint.html', title='Create Sprint', form=form, project_id=project_id,
+                           sprint_id=next_sprint_id)
+
+
+@app.route('/create_card/<project_id>', methods=['GET', 'POST'])
+@login_required
+def create_card(project_id):
+    form = User_StoriesForm()
+    if form.validate():
+        user_stories = User_Stories(Difficulty=form.Difficulty.data, Acceptance_criteria=form.Acceptance_criteria.data,
+                                    title=form.title.data, Description=form.Description.data, Status="PBI")
+        project = Project.query.filter_by(project_id=project_id).first()
+        db.session.add(user_stories)
+        user_stories.projects.append(project)
+        db.session.commit()
+        user_stories_id = db.engine.execute(
+            "Select user_stories_id from user_stories ORDER BY user_stories_id DESC limit 1").scalar()
+        db.engine.execute(
+            "insert into user_stories_sprint_table (user_stories_id) values ('" + str(user_stories_id) + "')")
+        flash('Congratulations, you made a User Story!')
+        return redirect(url_for('sprint_manage_endpoint', project_id=project_id))
+
+    return render_template('CreateUserStory.html', title='Create User Story', form=form, project_id=project_id)
 
 
 @app.route('/delete_card/<user_stories_id>')  # Pop up with warning and confirmation
@@ -562,12 +614,11 @@ def team_endpoint(project_id):
     return render_template('team.html', title="Team", member_ids=member_ids, get_username=get_username,
                            get_email=get_email, t_id=t_id, get_team_name=get_team_name, get_role=get_role,
                            project_id=project_id, get_role_id=get_role_id)
-  
+
 
 @app.route('/sprint_manage/<project_id>')
 @login_required
 def sprint_manage_endpoint(project_id):
-
     sprints = db.engine.execute("select sprint_id from project_sprint_table "
                                 " where project_sprint_table.project_id = " + project_id)
     # may have to use an order by start date to get them in the proper order
@@ -589,10 +640,9 @@ def sprint_manage_endpoint(project_id):
                            get_acceptance_criteria=get_acceptance_criteria, project_id=project_id)
 
 
-@app.route('/sprint/<sprint_id>')
+@app.route('/sprint/<sprint_id>', methods=['GET', 'POST'])
 @login_required
-def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
-
+def sprint_endpoint(sprint_id):
     old_retro = Sprint.query.get(sprint_id)
     sprintretro = RetroForm(obj=old_retro)
     if sprintretro.validate_on_submit():
@@ -650,29 +700,16 @@ def sprint_endpoint(sprint_id, methods=['GET', 'POST']):
     for prod_back in pb:
         prod_back_ids.append(prod_back[0])
 
+    s_id = db.engine.execute("select sprint_id from project_sprint_table where project_id = " + project_id)
+    sprint_ids = []
+    for s in s_id:
+        sprint_ids.append(s[0])
+
     return render_template('Sprint.html', title="Sprint Page", project_id=project_id, todo=todo, inprogress=in_progress,
                            done=done, prod_back_ids=prod_back_ids, get_title=get_title, get_difficulty=get_difficulty,
                            get_description=get_description, get_acceptance_criteria=get_acceptance_criteria,
-                           sprintretro=sprintretro, sprintreview=sprintreview)
-
-
-@app.route('/create_card/<project_id>', methods=['GET', 'POST'])
-@login_required
-def create_card(project_id):
-    form = User_StoriesForm()
-    if form.validate():
-        user_stories = User_Stories(Difficulty=form.Difficulty.data, Acceptance_criteria=form.Acceptance_criteria.data,
-                                    title=form.title.data, Description=form.Description.data, Status="PBI")
-        project = Project.query.filter_by(project_id=project_id).first()
-        db.session.add(user_stories)
-        user_stories.projects.append(project)
-        db.session.commit()
-        user_stories_id = db.engine.execute("Select user_stories_id from user_stories ORDER BY user_stories_id DESC limit 1").scalar()
-        db.engine.execute("insert into user_stories_sprint_table (user_stories_id) values ('" + str(user_stories_id) + "')")
-        flash('Congratulations, you made a User Story!')
-        return redirect(url_for('sprint_manage_endpoint', project_id=project_id))
-
-    return render_template('CreateUserStory.html', title='Create User Story', form=form, project_id=project_id)
+                           sprintretro=sprintretro, sprintreview=sprintreview, sprint_ids=sprint_ids,
+                           get_sprint_num=get_sprint_num)
 
 
 @app.route('/assign_role/<team_id>/<project_id>/<user_id>/<role_id>', methods=['GET', 'POST'])
@@ -701,16 +738,16 @@ def remove_role(role_id, project_id, team_id, user_id):
         return redirect(url_for('team_endpoint', project_id=project_id))
 
     db.engine.execute("update team_user_table set role_id = null where team_id = " + team_id +
-                      " and user_id = "+user_id)
+                      " and user_id = " + user_id)
     flash('Role successfully removed!')
     return redirect(url_for('team_endpoint', project_id=project_id))
 
 
-@app.route('/addmember/<project_id>',  methods=['GET', 'POST'])
+@app.route('/addmember/<project_id>', methods=['GET', 'POST'])
 @login_required
 def add_member(project_id):
     form = AddMemberForm()
-    t_id = db.engine.execute("select team_id from team_project_table where project_id = "+project_id)
+    t_id = db.engine.execute("select team_id from team_project_table where project_id = " + project_id)
     team_id = []
     for t in t_id:
         team_id.append(str(t[0]))
@@ -718,22 +755,51 @@ def add_member(project_id):
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
-        u_id = db.engine.execute("select user_id from user where username = '"+username+"' and email = '"+email+"'")
+        u_id = db.engine.execute(
+            "select user_id from user where username = '" + username + "' and email = '" + email + "'")
         user_id = []
         for u in u_id:
             user_id.append(str(u[0]))
         if not user_id:
             flash('User not found!')
         else:
-            u_name = db.engine.execute("select team_user_table_id from team_user_table where team_id = "+team_id[0]+" and user_id = "+user_id[0])
+            u_name = db.engine.execute(
+                "select team_user_table_id from team_user_table where team_id = " + team_id[0] + " and user_id = " +
+                user_id[0])
             usernames = []
             for name in u_name:
                 usernames.append(name[0])
             if not usernames:
-                db.engine.execute("insert into team_user_table (user_id, team_id) values ("+user_id[0]+", "+team_id[0]+")")
+                db.engine.execute(
+                    "insert into team_user_table (user_id, team_id) values (" + user_id[0] + ", " + team_id[0] + ")")
                 flash('Congratulations, you added a member!')
                 return redirect('/team/' + project_id)
             else:
-                flash(username+' is already a member of the team')
+                flash(username + ' is already a member of the team')
 
     return render_template('AddMember.html', title='Add Member', form=form)
+
+
+@app.route('/edit_githublink/<project_id>', methods=['GET', 'POST'])
+def edit_githublink(project_id):
+    proj = Project.query.filter_by(project_id=project_id).first()
+
+    if not proj:
+        flash('Project not found!')
+    form = GitHubForm()
+    if form.validate_on_submit():
+        github_link = form.github_link.data
+
+        if not github_link:
+            flash('GitHub link not found!')
+        elif "https://github.com" not in github_link:
+            flash('Please enter a valid GitHub link!')
+        else:
+            # proj.set_githublink = github_link
+            db.engine.execute("update project set github_link = '" + github_link + "' where project_id = " + project_id)
+            flash('GitHub link successfully updated!')
+            # db.session.commit()
+            return redirect('/project/' + project_id)
+
+    # return render_template(url_for('project_endpoint', project_id=project_id, github_link=github_link))
+    return render_template('editgithublink.html', title="Edit GitHub Link", form=form, project_id=project_id)
