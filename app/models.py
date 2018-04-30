@@ -87,8 +87,10 @@ class Project(db.Model):
     project_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     proj_name = db.Column(db.String(45))
     total_diff = db.Column(db.Integer)
-    id = synonym('project_id')
     Dod = db.Column(db.String(200))
+    github_link = db.Column(db.String(100))
+    id = synonym('project_id')
+
     # proj_team = relationship('Team', secondary = 'team_project_table')
     teams = db.relationship('Team', secondary=team_project_table, backref=db.backref('projteams', lazy='dynamic'))
     sprints = db.relationship('Sprint', secondary=project_sprint_table,
@@ -164,5 +166,4 @@ class Sprint(db.Model):
     id = synonym('sprint_id')
     # Teams = db.relationship('Team', secondary=team_sprint_table, backref=db.backref('teamsprints', lazy='dynamic'))
     # user_stories = db.relationship('User_Stories', secondary=user_stories_sprint_table, backref=db.backref('sprintus', lazy='dynamic'))
-    projects = db.relationship('Project', secondary=project_sprint_table,
-                               backref=db.backref('sprintproj', lazy='dynamic'))
+    # projects = db.relationship('Project', secondary=project_sprint_table, backref=db.backref('sprintproj', lazy='dynamic'))
