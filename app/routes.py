@@ -287,13 +287,13 @@ def project_endpoint(project_id):
     if form.validate():
         form.populate_obj(old_dod)
         Dod = str(form.Dod.data)
-        if len(Dod) <= 200:
+        if len(Dod) <= 400:
             db.engine.execute("UPDATE project SET Dod= \"" + Dod + "\" WHERE project_id= '" + project_id + "'")
             flash("Definition of done added")
             return redirect(url_for('project_endpoint', project_id=project_id))
 
         else:
-            flash('Exceeded char limit of 200.')
+            flash('Exceeded char limit of 400.')
     sprints_num = db.engine.execute("select sprint_num from sprint"
                                     " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
                                     " join project on (project_sprint_table.project_id = project.project_id)"
