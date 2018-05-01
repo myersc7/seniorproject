@@ -761,7 +761,7 @@ def sprint_endpoint(sprint_id):
                            done=done, prod_back_ids=prod_back_ids, get_title=get_title, get_difficulty=get_difficulty,
                            get_description=get_description, get_acceptance_criteria=get_acceptance_criteria,
                            sprintretro=sprintretro, sprintreview=sprintreview, sprint_ids=sprint_ids,
-                           get_sprint_num=get_sprint_num)
+                           get_sprint_num=get_sprint_num, sprint_id=sprint_id)
 
 
 #This end point assigns a role for a user in a team
