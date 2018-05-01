@@ -3,6 +3,8 @@ from wtforms import StringField, IntegerField, PasswordField, BooleanField, Subm
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
+#Forms use a library called WTF forms that make it easy to obtain and maintain restrictions on data coming form the
+#user, it also provides a submit button in html
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -82,6 +84,8 @@ class RegistrationForm(FlaskForm):
 
 
 class SprintForm(FlaskForm):
+    #Makes it so that the user know the format that the date has to be entered in, format also converts the format that
+    #We chose to enforce to the format that MYSQL uses
     start_date = DateField('Start Date (MM-DD-YYYY)', format='%m-%d-%Y', validators=[DataRequired()])
     end_date = DateField('End Date (MM-DD-YYYY)', format='%m-%d-%Y', validators=[DataRequired()])
     submit = SubmitField('Submit')

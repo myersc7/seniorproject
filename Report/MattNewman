@@ -1,0 +1,23 @@
+Non coding additions to the project
+-Scrum Master duties: Planning Meetings, asking what everyone is working on, communication with professor, etc..
+-All database work
+-Making all videos
+
+Coding additions (all back end)
+-Most of the models file
+-Most of the forms file
+-All sprint and project helper functions
+-Any create end points (sprint, card, and project)
+-All of Project endpoint except github and team button
+  -Definition of Done Modal
+  -getting information for burn up
+  -Finding current sprint
+  -Going to sprint management endpoint
+-All update status endpoints
+-All of the Card enpoint
+-Sprint Retro and Review on the sprint endpoint
+-Modal population in the sprint management endpoint
+
+Most of back end to front end integration (work with Chris Myers and Matt Grecco)
+
+Endless hours of bug fix on things not mentioned above

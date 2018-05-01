@@ -1,0 +1,13 @@
+Resolved issues
+1.  If a sprint has no cards, the burnup chart crashes.
+2.  If you put something back into Product Backlog, it counts for current sprint on the burnup.
+3.  Create Sprint URL doesn't use CSS styling.
+4.  Unable to remove a role from a team member.
+5.  "Add Role" adds a role to the first person in the list.
+6.  When updating cards, it gives a bad URL.
+7.  Navbar in Card pages do not work.
+8.  “Save Changes” Button in card details modal on Sprint Management page has no functionality.
+9.  Cards are still draggable. This is older functionality and will be removed in the future.
+10.  Deleting a project causes an error.
+
+Youtube: https://youtu.be/EbDTiNsdMf4
