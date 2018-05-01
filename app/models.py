@@ -66,7 +66,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(120))
     id = synonym('user_id')
     # user_team = relationship('Team', secondary = 'team_user_table')
-
+    # creates relationships with other tables for easy entry to relational tables
     teams = db.relationship('Team', secondary=team_user_table, backref=db.backref('userteams', lazy='dynamic'))
     user_stories = db.relationship('User_Stories', secondary=works_on, backref=db.backref('ususers', lazy='dynamic'))
     roles = db.relationship('Role', secondary=role_user_table, backref=db.backref('userroles', lazy='dynamic'))
