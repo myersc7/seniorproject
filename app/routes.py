@@ -688,9 +688,12 @@ def sprint_endpoint(sprint_id):
     if sprintretro.validate_on_submit():
         sprintretro.populate_obj(old_retro)
         Retro = str(sprintretro.Retro.data)
-        db.engine.execute("UPDATE sprint SET Retro= \"" + Retro + "\" WHERE sprint_id= '" + sprint_id + "'")
-        flash("Sprint Retrospective added")
-        return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
+        if len(Retro) <= 200:
+            db.engine.execute("UPDATE sprint SET Retro= \"" + Retro + "\" WHERE sprint_id= '" + sprint_id + "'")
+            flash("Sprint Retrospective added")
+            return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
+        else:
+            flash('Exceeded char limit of 200.')
 
     #makes the review modal work
     old_review = Sprint.query.get(sprint_id)
@@ -698,9 +701,12 @@ def sprint_endpoint(sprint_id):
     if sprintreview.validate_on_submit():
         sprintreview.populate_obj(old_retro)
         Review = str(sprintreview.Review.data)
-        db.engine.execute("UPDATE sprint SET Review= \"" + Review + "\" WHERE sprint_id= '" + sprint_id + "'")
-        flash("Sprint Review added")
-        return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
+        if len(Review) <= 200:
+            db.engine.execute("UPDATE sprint SET Review= \"" + Review + "\" WHERE sprint_id= '" + sprint_id + "'")
+            flash("Sprint Review added")
+            return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
+        else:
+            flash('Exceeded char limit of 200.')
 
     #gets project id
     project_id = str(
