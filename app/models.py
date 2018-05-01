@@ -66,7 +66,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(120))
     id = synonym('user_id')
     # user_team = relationship('Team', secondary = 'team_user_table')
-    #creates relationships with other tables for easy entry to relational tables
+
     teams = db.relationship('Team', secondary=team_user_table, backref=db.backref('userteams', lazy='dynamic'))
     user_stories = db.relationship('User_Stories', secondary=works_on, backref=db.backref('ususers', lazy='dynamic'))
     roles = db.relationship('Role', secondary=role_user_table, backref=db.backref('userroles', lazy='dynamic'))
@@ -97,9 +97,8 @@ class Project(db.Model):
 
     # proj_team = relationship('Team', secondary = 'team_project_table')
     teams = db.relationship('Team', secondary=team_project_table, backref=db.backref('projteams', lazy='dynamic'))
-    sprints = db.relationship('Sprint', secondary=project_sprint_table,
-                              backref=db.backref('projsprint', lazy='dynamic'))
-    # userstories = db.relationship('UserStories', secondary=user_stories_project_table, backred=db.backref('projuserstroies', lazy='dynamic'))
+    sprints = db.relationship('Sprint', secondary=project_sprint_table, backref=db.backref('projsprint', lazy='dynamic'))
+    #userstories = db.relationship('User_Stories', secondary=user_stories_project_table, backref=db.backref('projuserstories', lazy='dynamic'))
 
 
 class Team(db.Model):
@@ -143,12 +142,10 @@ class User_Stories(db.Model):
     id = synonym('user_stories_id')
 
     # users = db.relationship('User', secondary=works_on, backref=db.backref('ususerr', lazy='dynamic'))
-    sprints = db.relationship('Sprint', secondary=user_stories_sprint_table,
-                              backref=db.backref('teamusers', lazy='dynamic'))
+    #sprints = db.relationship('Sprint', secondary=user_stories_sprint_table, backref=db.backref('teamusers', lazy='dynamic'))
     #us_todo = db.relationship('To_do', backref=db.backref('usto_do'))
     #us_req = db.relationship('Requirements', backref=db.backref('us_req'))
-    projects = db.relationship('Project', secondary=user_stories_project_table,
-                               backref=db.backref('usproj', lazy='dynamic'))
+    projects = db.relationship('Project', secondary=user_stories_project_table, backref=db.backref('usproj', lazy='dynamic'))
 
 
 class Role(db.Model):
@@ -169,5 +166,5 @@ class Sprint(db.Model):
     Review = db.Column(db.String(200))
     id = synonym('sprint_id')
     # Teams = db.relationship('Team', secondary=team_sprint_table, backref=db.backref('teamsprints', lazy='dynamic'))
-    # user_stories = db.relationship('User_Stories', secondary=user_stories_sprint_table, backref=db.backref('sprintus', lazy='dynamic'))
+    user_stories = db.relationship('User_Stories', secondary=user_stories_sprint_table, backref=db.backref('sprintus', lazy='dynamic'))
     # projects = db.relationship('Project', secondary=project_sprint_table, backref=db.backref('sprintproj', lazy='dynamic'))

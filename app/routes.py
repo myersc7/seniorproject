@@ -400,8 +400,7 @@ def delete_project(project_id):
         db.session.delete(project)
         db.session.commit()
         flash('Project successfully deleted!')
-        return redirect(url_for('index'))
-    # might need additional return here?
+        return redirect(url_for('index'))\
 
 #this end point updates the database for a card to set the status to PBI
 @app.route('/PBI/<user_stories_id>', methods=['GET', 'POST'])
@@ -584,13 +583,12 @@ def create_card(project_id):
         user_stories = User_Stories(Difficulty=form.Difficulty.data, Acceptance_criteria=form.Acceptance_criteria.data,
                                     title=form.title.data, Description=form.Description.data, Status="PBI")
         project = Project.query.filter_by(project_id=project_id).first()
+        # add char counter for acceptance and description = 400
         db.session.add(user_stories)
         user_stories.projects.append(project)
         db.session.commit()
-        user_stories_id = db.engine.execute(
-            "Select user_stories_id from user_stories ORDER BY user_stories_id DESC limit 1").scalar()
-        db.engine.execute(
-            "insert into user_stories_sprint_table (user_stories_id) values ('" + str(user_stories_id) + "')")
+        user_stories_id = db.engine.execute("Select user_stories_id from user_stories ORDER BY user_stories_id DESC limit 1").scalar()
+        db.engine.execute("insert into user_stories_sprint_table (user_stories_id) values ('" + str(user_stories_id) + "')")
         flash('Congratulations, you made a User Story!')
         return redirect(url_for('sprint_manage_endpoint', project_id=project_id))
 
@@ -607,15 +605,13 @@ def delete_card(user_stories_id):
 
     if status != 'PBI':
         db.engine.execute("delete from user_stories_sprint_table where user_stories_id= '" + user_stories_id + "'")
-
-    db.engine.execute("delete from user_stories_project_table WHERE user_stories_id= '" + user_stories_id + "'")
+        db.engine.execute("delete from user_stories_project_table WHERE user_stories_id= '" + user_stories_id + "'")
 
     user_stories = User_Stories.query.filter_by(user_stories_id=user_stories_id).first()
 
     if not user_stories:
         flash('User Story not found!')
-
-    db.session.delete(user_stories)
+    db.engine.execute("delete from user_stories where user_stories_id = " + user_stories_id)
     db.session.commit()
     flash('User Story successfully deleted!')
     return redirect(url_for('sprint_manage_endpoint', project_id=project_id))
