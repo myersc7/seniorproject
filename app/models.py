@@ -3,6 +3,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from sqlalchemy.orm import synonym
 
+#Models make it so you can map your database in python to make it easy to interact with flask and your endpoints
+
+#Relational tables
+
 team_project_table = db.Table('team_project_table',
                               db.Column('project_id', db.Integer, db.ForeignKey('project.project_id')),
                               db.Column('team_id', db.Integer, db.ForeignKey('team.team_id'))
@@ -53,7 +57,7 @@ user_stories_project_table = db.Table('user_stories_project_table',
                                       )
 
 
-# check
+#Main tables
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -62,7 +66,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(120))
     id = synonym('user_id')
     # user_team = relationship('Team', secondary = 'team_user_table')
-
+    #creates relationships with other tables for easy entry to relational tables
     teams = db.relationship('Team', secondary=team_user_table, backref=db.backref('userteams', lazy='dynamic'))
     user_stories = db.relationship('User_Stories', secondary=works_on, backref=db.backref('ususers', lazy='dynamic'))
     roles = db.relationship('Role', secondary=role_user_table, backref=db.backref('userroles', lazy='dynamic'))
