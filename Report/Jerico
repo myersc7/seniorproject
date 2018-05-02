@@ -1,1 +1,38 @@
 Contributions:
+//- Back end
+Running/debugging the server for errors
+Updating master and porting GitHub files to server
+Update database constraints and attributes
+Database backup / help setup team's local db
+
+Setup initial framework for Flask (routes, models, flask extensions)
+Integrate SQLAlchemy with project (classes mapped to tables, association tables for joined tables and relationships between classes for backrefs)
+Forms for login, register, project, GitHub
+
+Designed routes for:
+- Login/logout
+- Register
+- Creating/deleting projects
+- Adding/removing roles in team page
+- Edit GitHub link
+
+//- Front end
+HTML for:
+- base to extend from for different pages
+- Login
+- Register
+- Index/Homepage
+- Create project
+- Edit GitHub link
+- Adding/Removing roles in team page
+- Dropdown navigation to different pages
+- Card page buttons and title/description spacing
+
+//- Cleanups
+- Clean up routes/models/htmls
+- Fixed navigation to the correct endpoints in different pages
+- Reordering/documenting functions/routes for easier readability
+- Sprint page dropdown label to show current sprint selected
+- Fixed various bugs (delete card, delete project, helper functions)
+- Add validators to forms when creating/deleting objects
+- Added char counters for fields to prevent excess data on update/insert

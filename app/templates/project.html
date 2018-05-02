@@ -1,21 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<script>
-    function getLink(){
-        var link = prompt("Enter your githublink here, https://github.com");
-
-        if(link === null) { return; } // if user press cancel do nothing
-        if (link == null || link == "" || !link.includes("https://github.com")) {
-            alert("Invalid github link, please try again!");
-        } else {
-            document.getElementById("GitHubLink").href = link;
-            alert("GitHub link updated!");
-        }
-
-
-    }
-</script>
 <body>
 
 <!-- Navbar -->
@@ -36,103 +21,95 @@
 
 <div class="center">
     <button href="#" class="popup-modal"
-                    data-toggle="modal" data-target="#DoD">Definition of Done</button>
+            data-toggle="modal" data-target="#DoD">Definition of Done</button>
 </div>
 
-    <!-- Creates two columns with Project management buttons and burnup chart -->
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <!-- Project Management Buttons -->
-                <a href="/sprint_manage/{{ project_id }}" class="button project-page-button hvr-shrink">Sprint Management</a>
-                <a href="{{currentSprint(project_id)}}" class="button project-page-button hvr-shrink">Current Sprint</a>
-                <div class="container">
-                    <div class="row">
-                        <div class="col6">
-                            <a href="{{ get_githublink(project_id) }}" id="GitHubLink" class="button project-page-button hvr-shrink">Project Github</a>
-                        </div>
-                        <div class="col">
-                            <a href="/edit_githublink/{{ project_id }}"
-                                    class="button project-page-button hvr-shrink">
-                                Edit Link
-                            </a>
-                        </div>
+<!-- Creates two columns with Project management buttons and burnup chart -->
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <!-- Project Management Buttons -->
+            <a href="/sprint_manage/{{ project_id }}" class="button project-page-button hvr-shrink">Sprint Management</a>
+            <a href="{{currentSprint(project_id)}}" class="button project-page-button hvr-shrink">Current Sprint</a>
+            <div class="container">
+                <div class="row">
+                    <div class="col6">
+                        <a href="{{ get_githublink(project_id) }}" id="GitHubLink" class="button project-page-button hvr-shrink">Project Github</a>
+                    </div>
+                    <div class="col">
+                        <a href="/edit_githublink/{{ project_id }}"
+                           class="button project-page-button hvr-shrink">
+                            Edit Link
+                        </a>
                     </div>
                 </div>
-                <a href="/team/{{ project_id }}" class="button project-page-button hvr-shrink">Team Page</a>
             </div>
-            <div class="col-8">
-                <!-- Burnup Chart -->
-                <div id="burnup" style="width:100%;"></div>
-            </div>
+            <a href="/team/{{ project_id }}" class="button project-page-button hvr-shrink">Team Page</a>
+        </div>
+        <div class="col-8">
+            <!-- Burnup Chart -->
+            <div id="burnup" style="width:100%;"></div>
         </div>
     </div>
+</div>
 
 <!-- Definition of Done Modal -->
 <div class="modal fade" id="DoD" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="DoD title">Definition of Done</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-        <div class = "center">
-        <form method='post' class="form-horizontal">
-            {{ form.hidden_tag() }}
-            <p>{{ form.Dod(cols="35", rows="20") }} </p>
-            <p>{{ form.submit() }}</p>
-            {% for error in form.Dod.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-           </form>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DoD title">Definition of Done</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class = "center">
+                <form method='post' class="form-horizontal">
+                    {{ form.hidden_tag() }}
+                    <p>{{ form.Dod(cols="35", rows="20") }} </p>
+                    <p>{{ form.submit() }}</p>
+                    {% for error in form.Dod.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
     </div>
-  </div>
 </div>
-
-{#
-
-<script src="../static/js/jquery-3.3.1.js"></script>
-<script src="../static/js/popper.js"></script>
-<script src="../static/js/bootstrap.bundle.min.js"></script>
-
-#}
 
 <!-- Creates Burnup Chart -->
 <script>
-var sprints = {{ sprints }};
-var totalDiff = {{ totalDiff }};
-var completeDiff = {{ completeDiff }};
-var trace0 = {
-  x: sprints,
-  y: totalDiff,
-  type: 'lines',
-  name: 'Total Difficulty'
-};
-var trace1 = {
-  x: sprints,
-  y: completeDiff,
-  type: 'lines',
-  name: 'Completed Difficulty'
-};
-var layout = {
-  title: 'Burn-Up Chart for Project',
-  xaxis: {
-    title: 'Sprint',
-    showgrid: false,
-  },
-  yaxis: {
-    title: 'Difficulty (points)',
-    showline: false
-  }
-};
-var data = [trace0, trace1];
-Plotly.newPlot('burnup', data, layout);
+    var sprints = {{ sprints }};
+    var totalDiff = {{ totalDiff }};
+    var completeDiff = {{ completeDiff }};
+    var trace0 = {
+        x: sprints,
+        y: totalDiff,
+        type: 'lines',
+        name: 'Total Difficulty'
+    };
+    var trace1 = {
+        x: sprints,
+        y: completeDiff,
+        type: 'lines',
+        name: 'Completed Difficulty'
+    };
+    var layout = {
+        title: 'Burn-Up Chart for Project',
+        xaxis: {
+            title: 'Sprint',
+            showgrid: false,
+        },
+        yaxis: {
+            title: 'Difficulty (points)',
+            showline: false
+        }
+    };
+    var data = [trace0, trace1];
+    Plotly.newPlot('burnup', data, layout);
 </script>
 
 </body>

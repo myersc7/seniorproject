@@ -112,8 +112,7 @@ def get_description(id: int):
 
 
 def get_acceptance_criteria(id: int):
-    accept = db.engine.execute(
-        "select acceptance_criteria from user_stories where user_stories.user_stories_id = " + id)
+    accept = db.engine.execute("select acceptance_criteria from user_stories where user_stories.user_stories_id = " + id)
 
     acceptance = []
     for acc in accept:
@@ -132,7 +131,7 @@ def get_role(user_id, team_id):
         role.append(r[0])
     try:
         return role[0]
-    #if no role
+    # if no role is found
     except IndexError:
         return 'None'
 
@@ -185,6 +184,7 @@ def get_githublink(project_id):
         if proj.github_link is not None:
             return proj.github_link
         else:
+            # return github home page if project's github link is null
             return 'https://github.com'
 
 
@@ -218,7 +218,8 @@ def index():
     proj_ids = db.engine.execute("select project.project_id from project"
                                  " join team_project_table on  (project.project_id = team_project_table.project_id)"
                                  " join team on (team_project_table.team_id = team.team_id)"
-                                 " join team_user_table on (team.team_id = team_user_table.team_id) where team_user_table.user_id = " + current_user.get_id())
+                                 " join team_user_table on (team.team_id = team_user_table.team_id)"
+                                 " where team_user_table.user_id = " + current_user.get_id())
     #gets all the projects that a user has
     project_ids = []
     for pid in proj_ids:
@@ -285,7 +286,6 @@ def project_endpoint(project_id):
     if not proj:
         flash('Project not found!')
 
-
     elif proj.github_link is not None:
         github_link = proj.github_link
 
@@ -306,7 +306,7 @@ def project_endpoint(project_id):
             return redirect(url_for('project_endpoint', project_id=project_id))
 
         else:
-            flash('Exceeded char limit of 200.')
+            flash('Exceeded char limit.')
     #this gets the number of sprints
     sprints_num = db.engine.execute("select sprint_num from sprint"
                                     " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
@@ -400,7 +400,7 @@ def delete_project(project_id):
         db.session.delete(project)
         db.session.commit()
         flash('Project successfully deleted!')
-        return redirect(url_for('index'))\
+        return redirect(url_for('index'))
 
 #this end point updates the database for a card to set the status to PBI
 @app.route('/PBI/<user_stories_id>', methods=['GET', 'POST'])
@@ -468,13 +468,13 @@ def To_do(user_stories_id: int):
 @login_required
 def In_p(user_stories_id: int):
     #finds project id
-    project_id = str(db.engine.execute(
-        "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
+    project_id = str(db.engine.execute("Select project_id from user_stories_project_table"
+                                       " where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
     #finds current sprint
-    curr = db.engine.execute(
-        "Select sprint.sprint_id from sprint join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
-        "join project on (project_sprint_table.project_id = project.project_id)"
-        "where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
+    curr = db.engine.execute("Select sprint.sprint_id from sprint"
+                             " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+                             " join project on (project_sprint_table.project_id = project.project_id)"
+                             " where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
 
     currSprint = []
     for sprint in curr:
@@ -485,9 +485,8 @@ def In_p(user_stories_id: int):
     #Updates status
     db.engine.execute("UPDATE user_stories SET Status='In Progress' WHERE user_stories_id= '" + user_stories_id + "'")
     #Attaches to current sprint
-    db.engine.execute(
-        "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(
-            user_stories_id) + "'")
+    db.engine.execute("UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) +
+                      "' WHERE user_stories_id= '" + str(user_stories_id) + "'")
 
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
@@ -496,13 +495,13 @@ def In_p(user_stories_id: int):
 @login_required
 def Done(user_stories_id: int):
     #finds project id
-    project_id = str(db.engine.execute(
-        "Select project_id from user_stories_project_table where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
+    project_id = str(db.engine.execute("Select project_id from user_stories_project_table"
+                                       " where user_stories_project_table.user_stories_id ='" + user_stories_id + "'").scalar())
     #finds current sprint
-    curr = db.engine.execute(
-        "Select sprint.sprint_id from sprint join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
-        "join project on (project_sprint_table.project_id = project.project_id)"
-        "where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
+    curr = db.engine.execute("Select sprint.sprint_id from sprint"
+                             " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
+                             " join project on (project_sprint_table.project_id = project.project_id)"
+                             " where project.project_id = '" + project_id + "' ORDER BY Sprint_num DESC LIMIT 1")
 
     currSprint = []
     for sprint in curr:
@@ -513,9 +512,8 @@ def Done(user_stories_id: int):
     #updates status
     db.engine.execute("UPDATE user_stories SET Status='Done' WHERE user_stories_id= '" + user_stories_id + "'")
     #attaches card to current sprin
-    db.engine.execute(
-        "UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) + "' WHERE user_stories_id= '" + str(
-            user_stories_id) + "'")
+    db.engine.execute("UPDATE user_stories_sprint_table SET sprint_id = '" + str(sprint_id) +
+                      "' WHERE user_stories_id= '" + str(user_stories_id) + "'")
 
     return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
 
@@ -527,8 +525,8 @@ def card(user_stories_id):
     card = User_Stories.query.get(user_stories_id)
     #gets project id
     project_id = str(
-        db.engine.execute(
-            "select project_id from user_stories_project_table where user_stories_id ='" + user_stories_id + "'").scalar())
+        db.engine.execute("select project_id from user_stories_project_table"
+                          " where user_stories_id ='" + user_stories_id + "'").scalar())
 
     #normal form but also populates the values
     form = User_StoriesForm(obj=card)
@@ -538,10 +536,12 @@ def card(user_stories_id):
         difficulty = str(form.Difficulty.data)
         description = str(form.Description.data)
         acc_crit = str(form.Acceptance_criteria.data)
-        db.engine.execute(
-            "UPDATE user_stories SET title= \"" + title + "\" , Difficulty = \"" + difficulty + "\" , Description = \""
-            + description + "\" , Acceptance_criteria = \"" + acc_crit + "\" WHERE user_stories_id= '" + user_stories_id + "'")
-        return redirect(url_for("card", user_stories_id=user_stories_id))
+        # add char counter for description and acceptance critera capped at 400 chars each
+        if len(description) <= 200 and len(acc_crit) <= 200:
+            db.engine.execute("UPDATE user_stories SET title= \"" + title + "\" , Difficulty = \"" + difficulty
+                              + "\" , Description = \"" + description + "\" , Acceptance_criteria = \"" + acc_crit
+                              + "\" WHERE user_stories_id= '" + user_stories_id + "'")
+            return redirect(url_for("card", user_stories_id=user_stories_id))
     return render_template('Card.html', title="card", form=form, user_stories_id=user_stories_id,
                            delete_card=delete_card, project_id=project_id)
 
@@ -555,14 +555,12 @@ def create_sprint(project_id):
         sprint = Sprint(start_date=form.start_date.data, end_date=form.end_date.data, sprint_num=next_sprint)
         project = Project.query.filter_by(project_id=project_id).first()
         db.session.add(sprint)
-        # sprint.projects.append(project)
         project.sprints.append(sprint)
         db.session.commit()
         next_sprint_id = str(db.engine.execute("select sprint.sprint_id from sprint"
                                                " join project_sprint_table on (sprint.sprint_id = project_sprint_table.sprint_id)"
                                                " where sprint.sprint_num = '" + str(next_sprint) +
-                                               "' and project_sprint_table.project_id ='" + str(
-            project_id) + "'").scalar())
+                                               "' and project_sprint_table.project_id ='" + str(project_id) + "'").scalar())
         flash('Congratulations, you made a sprint!')
         return redirect(url_for('sprint_endpoint', sprint_id=str(next_sprint_id)))
 
@@ -693,7 +691,7 @@ def sprint_endpoint(sprint_id):
             flash("Sprint Retrospective added")
             return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
         else:
-            flash('Exceeded char limit of 200.')
+            flash('Exceeded char limit.')
 
     #makes the review modal work
     old_review = Sprint.query.get(sprint_id)
@@ -706,7 +704,7 @@ def sprint_endpoint(sprint_id):
             flash("Sprint Review added")
             return redirect(url_for('sprint_endpoint', sprint_id=sprint_id))
         else:
-            flash('Exceeded char limit of 200.')
+            flash('Exceeded char limit.')
 
     #gets project id
     project_id = str(
@@ -792,8 +790,8 @@ def remove_role(role_id, project_id, team_id, user_id):
         flash('Role was not found!')
         return redirect(url_for('team_endpoint', project_id=project_id))
 
-    db.engine.execute("update team_user_table set role_id = null where team_id = " + team_id +
-                      " and user_id = " + user_id)
+    db.engine.execute("update team_user_table set role_id = null"
+                      " where team_id = " + team_id + " and user_id = " + user_id)
     flash('Role successfully removed!')
     return redirect(url_for('team_endpoint', project_id=project_id))
 
@@ -810,8 +808,8 @@ def add_member(project_id):
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
-        u_id = db.engine.execute(
-            "select user_id from user where username = '" + username + "' and email = '" + email + "'")
+        u_id = db.engine.execute("select user_id from user"
+                                 " where username = '" + username + "' and email = '" + email + "'")
         user_id = []
         for u in u_id:
             user_id.append(str(u[0]))

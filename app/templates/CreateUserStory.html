@@ -1,70 +1,66 @@
 {% extends "base.html" %}
 {% block content %}
-    <body>
+<body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-        <a class="navbar-brand" href="/index">Agility</a>
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/project/{{ project_id }}">Project</a>
-            </li>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <a class="navbar-brand" href="/index">Agility</a>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ title }}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/project/{{ project_id }}">Project Page</a>
+                <a class="dropdown-item" href="/sprint_manage/{{ project_id }}">Sprint Management</a>
+                <a class="dropdown-item" href="/team/{{ project_id }}">Team Page</a>
+            </div>
+        </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="/sprint_manage/{{ project_id }}">Sprint Management</a>
-            </li>
+    </ul>
+    <ul class="navbar-nav">
 
-            <li class="nav-item">
-                <a class="nav-link" href="/sprint/{{ project_id }}">Sprint Page</a>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">Log Out</a>
+        </li>
+    </ul>
+</nav>
 
-            <li class="nav-item">
-                <a class="nav-link" href="/team/{{ project_id }}">Team Page</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
+<h1>Create User Story</h1>
 
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Log Out</a>
-            </li>
-        </ul>
-    </nav>
-
-    <h1>Create User Story</h1>
-
-    <div class="container">
-        <form align="center" action="" method="post">
-            {{ form.hidden_tag() }}
-            <p>
-                {{ form.title.label }}<br>
-                {{ form.title(size=45) }}<br>
-                {% for error in form.title.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-            <p>
-                {{ form.Difficulty.label }}<br>
-                {{ form.Difficulty(size=45) }}<br>
-                {% for error in form.Difficulty.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-            <p>
-                {{ form.Description.label }}<br>
-                {{ form.Description(size=45) }}<br>
-                {% for error in form.Description.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-            <p>
-                {{ form.Acceptance_criteria.label }}<br>
-                {{ form.Acceptance_criteria(cols="50", rows="10") }}<br>
-                {% for error in form.Acceptance_criteria.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-            <p>{{ form.submit() }}</p>
-        </form>
-    </div>
+<div class="container">
+    <form align="center" action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title(size=45) }}<br>
+            {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.Difficulty.label }}<br>
+            {{ form.Difficulty(size=45) }}<br>
+            {% for error in form.Difficulty.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.Description.label }}<br>
+            {{ form.Description(size=45) }}<br>
+            {% for error in form.Description.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.Acceptance_criteria.label }}<br>
+            {{ form.Acceptance_criteria(cols="50", rows="10") }}<br>
+            {% for error in form.Acceptance_criteria.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</div>
 {% endblock %}
 </body>

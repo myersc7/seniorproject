@@ -2,27 +2,32 @@
 
 {% block content %}
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-        <a class="navbar-brand" href="/index">Agility</a>
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/project/{{ project_id }}">Project Page</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/team/{{ project_id }}">Team Page</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <a class="navbar-brand" href="/index">Agility</a>
+    <ul class="navbar-nav mr-auto">
 
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Log Out</a>
-            </li>
-        </ul>
-    </nav>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ title }}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/project/{{ project_id }}">Project Page</a>
 
-    <h1>{{ title }}</h1>
-    <div class="container">
+                <a class="dropdown-item" href="/team/{{ project_id }}">Team Page</a>
+            </div>
+        </li>
+    </ul>
+
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">Log Out</a>
+        </li>
+    </ul>
+</nav>
+
+<h1>{{ title }}</h1>
+<div class="container">
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p align="center">
@@ -41,5 +46,5 @@
         </p>
         <p align="center">{{ form.submit() }}</p>
     </form>
-    </div>
+</div>
 {% endblock %}
