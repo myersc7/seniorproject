@@ -1,1 +1,27 @@
+non-coding contributions:
+-helped design the initial look of the site with the rest of the team
+-demonstrated website to professor and class
+-created powerpoint for presentation
 
+coding contributuions:
+-created HTML templates for:
+      -sign-in page
+          -form to enter email and password
+          -button to submit information
+          -button to register
+      -team page
+          -container to store member information
+      -register page 
+          -form to enter username, email, password, confirm password 
+          -button to submit information
+-updated final HTML templates for:
+      -team page
+          -updated styling
+      -sprint page
+          -product backlog, to-do, in-progress, done lists
+          -buttons for sprint retro and sprint review
+          -dropdown to access each sprint
+-used bootstrap navbar to each page
+-created forms for sprint retro and sprint review with WTForms
+-updated css file with sytiling for pages
+-helped other group members with bug fixes
