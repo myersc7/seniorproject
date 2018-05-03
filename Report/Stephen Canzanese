@@ -1,6 +1,7 @@
-Wrote endpoint for index/home page, sprint management page, sprint page, and add member.
+Wrote endpoint for index/home page, sprint management page, sprint page, team page and add member.
 Wrote several of the functions, get_description, get_title, get_difficulty, get_acceptance criteria
 modified some html files to work with data from database
 Tested
 Manually added a lot of data to database early on so we could test things
 We all worked together during the design phase early in the semester
+prepped demo account 
