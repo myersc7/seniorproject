@@ -1,0 +1,21 @@
+Non-Coding Contributions
+-Worked with rest of team on designing overall project and page layouts.
+-Worked with rest of team on Spec document.
+-Authored Design Document/made initial page images (except EER diagram and database-related info, which Matt Newman did.
+-Set up new GitHub when we needed a fresh start.
+-Revised Spec and Design Document (with help from Matt Newman).
+
+Coding Contributions
+-Worked with Matt Greco to develop front end of project.
+-Figured out how to use a single stylesheet for entire project.
+-Designed overall visual style of project.
+-Figured out how to use Plotly for burnup chart.
+-Figured out how to use Hover for button hover animations.
+-Figured out how to use Bootstrap with Matt Greco.
+-Made Project Page (except for "Edit GitHub Link" button).
+-Made Sprint Management Page.
+-Made overall design of card lists and sprint list.
+-Designed Card modals.
+-Helped make Card Page.
+-Helped with other html/css/js-related tasks.
+-Bug tested html/css/js-related issues.
